@@ -15,6 +15,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Collection;
 import java.util.Set;
 
 public class CourseGraph {
@@ -35,7 +36,7 @@ public class CourseGraph {
             }
 
             Map<String, Integer> header = getHeaderIndex(headerLine);
-            requireColumns(header, "course_code", "course_name", "semester", "sks", "category", "track", "difficulty");
+            requireColumns(header, "course_code", "course_name", "semester", "sks", "category", "difficulty");
 
             String line;
             int row = 1;
@@ -51,7 +52,7 @@ public class CourseGraph {
                 int semester = parseInt(getRequiredValue(values, header, "semester", row), "semester", row);
                 int credits = parseInt(getRequiredValue(values, header, "sks", row), "sks", row);
                 String category = getRequiredValue(values, header, "category", row);
-                String track = getRequiredValue(values, header, "track", row);
+                String track = header.containsKey("track") ? getRequiredValue(values, header, "track", row) : "-";
                 String difficulty = getRequiredValue(values, header, "difficulty", row);
 
                 addCourse(new Course(code, name, semester, credits, category, track, difficulty));
@@ -87,12 +88,18 @@ public class CourseGraph {
     }
 
     public void addCourse(Course course) {
+        if (course == null) {
+            throw new IllegalArgumentException("Data mata kuliah tidak boleh kosong.");
+        }
+        if (courses.containsKey(course.getCode())) {
+            throw new IllegalArgumentException("Kode mata kuliah sudah ada: " + course.getCode());
+        }
         courses.put(course.getCode(), course);
         adjacencyList.putIfAbsent(course.getCode(), new ArrayList<>());
         reverseAdjacencyList.putIfAbsent(course.getCode(), new ArrayList<>());
     }
 
-    public void addEdge(String prerequisiteCode, String courseCode) {
+    public boolean addEdge(String prerequisiteCode, String courseCode) {
         validateCourseExists(prerequisiteCode);
         validateCourseExists(courseCode);
 
@@ -101,10 +108,50 @@ public class CourseGraph {
         }
 
         List<String> nextCourses = adjacencyList.get(prerequisiteCode);
-        if (!nextCourses.contains(courseCode)) {
-            nextCourses.add(courseCode);
-            reverseAdjacencyList.get(courseCode).add(prerequisiteCode);
+        if (nextCourses.contains(courseCode)) {
+            return false;
         }
+
+        nextCourses.add(courseCode);
+        reverseAdjacencyList.get(courseCode).add(prerequisiteCode);
+
+        if (hasCycle()) {
+            nextCourses.remove(courseCode);
+            reverseAdjacencyList.get(courseCode).remove(prerequisiteCode);
+            throw new IllegalArgumentException("Relasi menyebabkan cycle dan dibatalkan: " + prerequisiteCode + " -> " + courseCode);
+        }
+
+        return true;
+    }
+
+    public boolean updateCourse(String code, Course updatedCourse) {
+        validateCourseExists(code);
+        if (updatedCourse == null) {
+            throw new IllegalArgumentException("Data mata kuliah baru tidak boleh kosong.");
+        }
+        if (!code.equals(updatedCourse.getCode())) {
+            throw new IllegalArgumentException("Kode mata kuliah tidak boleh diubah.");
+        }
+
+        courses.put(code, updatedCourse);
+        return true;
+    }
+
+    public boolean deleteCourse(String code) {
+        validateCourseExists(code);
+
+        courses.remove(code);
+        adjacencyList.remove(code);
+        reverseAdjacencyList.remove(code);
+
+        for (List<String> neighbors : adjacencyList.values()) {
+            neighbors.remove(code);
+        }
+        for (List<String> prerequisites : reverseAdjacencyList.values()) {
+            prerequisites.remove(code);
+        }
+
+        return true;
     }
 
     private void validateCourseExists(String code) {
@@ -121,8 +168,21 @@ public class CourseGraph {
         return courses;
     }
 
+    public Collection<Course> getAllCourses() {
+        return courses.values();
+    }
+
     public Map<String, List<String>> getAdjacencyList() {
         return adjacencyList;
+    }
+
+    public Map<String, List<String>> getReverseAdjacencyList() {
+        return reverseAdjacencyList;
+    }
+
+    public List<String> getDirectPrerequisites(String courseCode) {
+        validateCourseExists(courseCode);
+        return new ArrayList<>(reverseAdjacencyList.get(courseCode));
     }
 
     public int getTotalCourses() {

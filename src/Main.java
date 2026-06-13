@@ -28,7 +28,7 @@ public class Main {
 
     private static Trie buildTrie(CourseGraph graph) {
         Trie trie = new Trie();
-        for (Course course : graph.getCourses().values()) {
+        for (Course course : graph.getAllCourses()) {
             trie.insert(course.getCode(), course.getCode());
             trie.insert(course.getName(), course.getCode());
         }
@@ -65,6 +65,24 @@ public class Main {
                 case "7":
                     System.out.println(graph.hasCycle() ? "Graph memiliki cycle." : "Graph tidak memiliki cycle.");
                     break;
+                case "8":
+                    if (addCourse(scanner, graph)) {
+                        trie = buildTrie(graph);
+                    }
+                    break;
+                case "9":
+                    addPrerequisiteRelation(scanner, graph);
+                    break;
+                case "10":
+                    if (updateCourse(scanner, graph)) {
+                        trie = buildTrie(graph);
+                    }
+                    break;
+                case "11":
+                    if (deleteCourse(scanner, graph)) {
+                        trie = buildTrie(graph);
+                    }
+                    break;
                 case "0":
                     System.out.println("Program selesai.");
                     return;
@@ -87,6 +105,10 @@ public class Main {
         System.out.println("5. Tampilkan semua prasyarat tidak langsung");
         System.out.println("6. Rekomendasi urutan pengambilan mata kuliah");
         System.out.println("7. Deteksi cycle");
+        System.out.println("8. Tambah mata kuliah");
+        System.out.println("9. Tambah relasi prasyarat");
+        System.out.println("10. Update mata kuliah");
+        System.out.println("11. Delete mata kuliah");
         System.out.println("0. Keluar");
     }
 
@@ -107,16 +129,26 @@ public class Main {
 
     private static void showDirectPrerequisites(Scanner scanner, CourseGraph graph) {
         System.out.print("Masukkan kode mata kuliah: ");
-        String courseCode = scanner.nextLine().trim();
+        String courseCode = scanner.nextLine().trim().toUpperCase();
+        Course target = graph.getCourse(courseCode);
+        if (target == null) {
+            System.out.println("Kode mata kuliah tidak ditemukan: " + courseCode);
+            return;
+        }
+
         graph.printDirectPrerequisites(courseCode);
     }
 
     private static void showAllPrerequisites(Scanner scanner, CourseGraph graph) {
         System.out.print("Masukkan kode mata kuliah: ");
-        String courseCode = scanner.nextLine().trim();
-        Set<String> prerequisites = graph.getAllPrerequisites(courseCode);
-
+        String courseCode = scanner.nextLine().trim().toUpperCase();
         Course target = graph.getCourse(courseCode);
+        if (target == null) {
+            System.out.println("Kode mata kuliah tidak ditemukan: " + courseCode);
+            return;
+        }
+
+        Set<String> prerequisites = graph.getAllPrerequisites(courseCode);
         System.out.println("Semua prasyarat untuk " + target);
         if (prerequisites.isEmpty()) {
             System.out.println("- Tidak ada prasyarat.");
@@ -129,10 +161,167 @@ public class Main {
     }
 
     private static void showTopologicalSort(CourseGraph graph) {
-        List<String> order = graph.topologicalSort();
+        List<String> order;
+        try {
+            order = graph.topologicalSort();
+        } catch (IllegalStateException error) {
+            System.out.println("Tidak bisa membuat rekomendasi karena terdapat siklus prasyarat.");
+            return;
+        }
+
         System.out.println("Rekomendasi urutan pengambilan mata kuliah:");
         for (int i = 0; i < order.size(); i++) {
             System.out.printf("%02d. %s%n", i + 1, graph.getCourse(order.get(i)));
+        }
+    }
+
+    private static boolean addCourse(Scanner scanner, CourseGraph graph) {
+        System.out.println("Tambah mata kuliah baru");
+        String code = readRequiredText(scanner, "Kode: ").toUpperCase();
+        if (graph.getCourse(code) != null) {
+            System.out.println("Kode mata kuliah sudah ada: " + code);
+            return false;
+        }
+
+        String name = readRequiredText(scanner, "Nama: ");
+        int semester = readPositiveInt(scanner, "Semester rekomendasi: ");
+        int credits = readPositiveInt(scanner, "SKS: ");
+        String category = readRequiredText(scanner, "Kategori: ");
+        String track = readRequiredText(scanner, "Track: ");
+        String difficulty = readRequiredText(scanner, "Difficulty: ");
+
+        try {
+            graph.addCourse(new Course(code, name, semester, credits, category, track, difficulty));
+            System.out.println("Mata kuliah berhasil ditambahkan.");
+            return true;
+        } catch (IllegalArgumentException error) {
+            System.out.println("Gagal menambah mata kuliah: " + error.getMessage());
+            return false;
+        }
+    }
+
+    private static void addPrerequisiteRelation(Scanner scanner, CourseGraph graph) {
+        System.out.println("Tambah relasi prasyarat");
+        String prerequisiteCode = readRequiredText(scanner, "Kode prasyarat: ").toUpperCase();
+        String courseCode = readRequiredText(scanner, "Kode mata kuliah tujuan: ").toUpperCase();
+
+        try {
+            boolean added = graph.addEdge(prerequisiteCode, courseCode);
+            if (added) {
+                System.out.println("Relasi berhasil ditambahkan: " + prerequisiteCode + " -> " + courseCode);
+            } else {
+                System.out.println("Relasi sudah ada, tidak ditambahkan ulang.");
+            }
+        } catch (IllegalArgumentException error) {
+            System.out.println("Gagal menambah relasi: " + error.getMessage());
+        }
+    }
+
+    private static boolean updateCourse(Scanner scanner, CourseGraph graph) {
+        System.out.println("Update mata kuliah");
+        String code = readRequiredText(scanner, "Kode mata kuliah yang akan diupdate: ").toUpperCase();
+        Course current = graph.getCourse(code);
+        if (current == null) {
+            System.out.println("Kode mata kuliah tidak ditemukan: " + code);
+            return false;
+        }
+
+        System.out.println("Data saat ini: " + current);
+        String name = readOptionalText(scanner, "Nama baru", current.getName());
+        int semester = readOptionalPositiveInt(scanner, "Semester rekomendasi baru", current.getSemester());
+        int credits = readOptionalPositiveInt(scanner, "SKS baru", current.getCredits());
+        String category = readOptionalText(scanner, "Kategori baru", current.getCategory());
+        String track = readOptionalText(scanner, "Track baru", current.getTrack());
+        String difficulty = readOptionalText(scanner, "Difficulty baru", current.getDifficulty());
+
+        Course updatedCourse = new Course(code, name, semester, credits, category, track, difficulty);
+        try {
+            graph.updateCourse(code, updatedCourse);
+            System.out.println("Mata kuliah berhasil diupdate.");
+            return true;
+        } catch (IllegalArgumentException error) {
+            System.out.println("Gagal update mata kuliah: " + error.getMessage());
+            return false;
+        }
+    }
+
+    private static boolean deleteCourse(Scanner scanner, CourseGraph graph) {
+        System.out.println("Delete mata kuliah");
+        String code = readRequiredText(scanner, "Kode mata kuliah yang akan dihapus: ").toUpperCase();
+        Course course = graph.getCourse(code);
+        if (course == null) {
+            System.out.println("Kode mata kuliah tidak ditemukan: " + code);
+            return false;
+        }
+
+        System.out.println("Data yang akan dihapus: " + course);
+        System.out.print("Yakin hapus mata kuliah dan semua edge terkait? (y/n): ");
+        String confirmation = scanner.nextLine().trim();
+        if (!confirmation.equalsIgnoreCase("y")) {
+            System.out.println("Delete dibatalkan.");
+            return false;
+        }
+
+        try {
+            graph.deleteCourse(code);
+            System.out.println("Mata kuliah berhasil dihapus beserta edge terkait.");
+            return true;
+        } catch (IllegalArgumentException error) {
+            System.out.println("Gagal delete mata kuliah: " + error.getMessage());
+            return false;
+        }
+    }
+
+    private static String readRequiredText(Scanner scanner, String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String value = scanner.nextLine().trim();
+            if (!value.isEmpty()) {
+                return value;
+            }
+            System.out.println("Input tidak boleh kosong.");
+        }
+    }
+
+    private static int readPositiveInt(Scanner scanner, String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String value = scanner.nextLine().trim();
+            try {
+                int number = Integer.parseInt(value);
+                if (number > 0) {
+                    return number;
+                }
+            } catch (NumberFormatException ignored) {
+                // handled by message below
+            }
+            System.out.println("Input harus berupa angka positif.");
+        }
+    }
+
+    private static String readOptionalText(Scanner scanner, String label, String currentValue) {
+        System.out.print(label + " [" + currentValue + "]: ");
+        String value = scanner.nextLine().trim();
+        return value.isEmpty() ? currentValue : value;
+    }
+
+    private static int readOptionalPositiveInt(Scanner scanner, String label, int currentValue) {
+        while (true) {
+            System.out.print(label + " [" + currentValue + "]: ");
+            String value = scanner.nextLine().trim();
+            if (value.isEmpty()) {
+                return currentValue;
+            }
+
+            try {
+                int number = Integer.parseInt(value);
+                if (number > 0) {
+                    return number;
+                }
+            } catch (NumberFormatException ignored) {
+                // handled by message below
+            }
+            System.out.println("Input harus berupa angka positif atau kosong untuk mempertahankan nilai lama.");
         }
     }
 }

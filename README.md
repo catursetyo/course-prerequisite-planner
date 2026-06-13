@@ -32,6 +32,12 @@ Run this from the root project folder:
 javac -d out src/Main.java src/model/Course.java src/graph/CourseGraph.java src/tree/Trie.java src/tree/TrieNode.java
 ```
 
+Or, if you're using Linux, you can do this instead:
+
+```bash
+javac -d out $(find src -name "*.java")
+```
+
 ## How to Run
 
 ```bash
