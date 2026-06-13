@@ -1,0 +1,111 @@
+record_type,id,course_code,course_name,semester,sks,category,track,difficulty,prerequisite_code,prerequisite_name,relation_type,is_official
+NODE,ET234101,ET234101,Statistika dan Probabilitas,1,2,Dasar Computing,Core,Dasar,,,,
+NODE,ET234102,ET234102,Arsitektur dan Organisasi Komputer,1,3,Sistem Komputer,Core,Dasar,,,,
+NODE,ET234103,ET234103,Algoritma dan Teknik Pemrograman,1,4,Pemrograman,Core,Dasar,,,,
+NODE,EE234101,EE234101,Pengantar Teknologi Elektro dan Informatika Cerdas,1,2,Pengantar Fakultas,Core,Dasar,,,,
+NODE,SM234101,SM234101,Kalkulus 1,1,3,Matematika,Core,Dasar,,,,
+NODE,SF234204,SF234204,Fisika Dasar,1,3,Sains Dasar,Core,Dasar,,,,
+NODE,ET234104,ET234104,Hukum dan Etika Teknologi Informasi,1,2,Etika TI,Core,Dasar,,,,
+NODE,ET234201,ET234201,Sistem Operasi,2,4,Sistem Komputer,Core,Menengah,,,,
+NODE,SM234201,SM234201,Kalkulus 2,2,3,Matematika,Core,Menengah,,,,
+NODE,ET234202,ET234202,Arsitektur Enterprise,2,3,Sistem Informasi,Core,Menengah,,,,
+NODE,ET234203,ET234203,Struktur Data dan Pemrograman Berorientasi Objek,2,3,Pemrograman,Core,Menengah,,,,
+NODE,ET234204,ET234204,Sistem Basis Data,2,4,Data,Core,Menengah,,,,
+NODE,ET234301,ET234301,Ethical Hacking dan Uji Keamanan Siber,3,4,Keamanan Siber,Core,Lanjut,,,,
+NODE,ET234302,ET234302,Keamanan Jaringan Komputer,3,3,Keamanan Siber,Core,Lanjut,,,,
+NODE,ET234303,ET234303,Internet of Things,3,3,IoT dan Smart City,Core,Lanjut,,,,
+NODE,ET234304,ET234304,Komunikasi Profesional,3,2,Komunikasi,Core,Dasar,,,,
+NODE,ET234305,ET234305,Pemrograman Web,3,4,Pengembangan Aplikasi,Core,Lanjut,,,,
+NODE,ET234306,ET234306,Komunikasi Data dan Jaringan Komputer,3,4,Jaringan,Core,Lanjut,,,,
+NODE,ET234401,ET234401,Manajemen Insiden Keamanan Siber,4,3,Keamanan Siber,Core,Lanjut,,,,
+NODE,ET234402,ET234402,Security Operations Center,4,3,Keamanan Siber,Core,Lanjut,,,,
+NODE,ET234403,ET234403,Teknologi Komputasi Awan,4,4,Komputasi Awan,Core,Lanjut,,,,
+NODE,ET234404,ET234404,Big Data dan Data Lakehouse,4,3,Data,Core,Lanjut,,,,
+NODE,ET234405,ET234405,Kecerdasan Artifisial dan Machine Learning,4,4,Sistem Cerdas,Core,Lanjut,,,,
+NODE,ET234406,ET234406,Integrasi Sistem,4,3,Integrasi Sistem,Core,Lanjut,,,,
+NODE,ET234501,ET234501,Kriptografi,5,3,Keamanan Siber,Core/Pengayaan,Lanjut,,,,
+NODE,ET234502,ET234502,Keamanan Web dan Aplikasi,5,3,Keamanan Siber,Core/Pengayaan,Lanjut,,,,
+NODE,ET234503,ET234503,Tata Kelola Teknologi Informasi,5,3,Tata Kelola TI,Core/Pengayaan,Menengah,,,,
+NODE,ET234504,ET234504,Teknologi Smartcity,5,4,IoT dan Smart City,Core/Pengayaan,Lanjut,,,,
+NODE,ET234505,ET234505,Strategi Optimasi Komputasi Awan,5,3,Komputasi Awan,Core/Pengayaan,Lanjut,,,,
+NODE,ET234506,ET234506,Pemrograman Mobile,5,3,Pengembangan Aplikasi,Core/Pengayaan,Lanjut,,,,
+NODE,UG234905,UG234905,Agama Budha,6,2,MKWK,Umum,Dasar,,,,
+NODE,UG234904,UG234904,Agama Hindu,6,2,MKWK,Umum,Dasar,,,,
+NODE,UG234901,UG234901,Agama Islam,6,2,MKWK,Umum,Dasar,,,,
+NODE,UG234903,UG234903,Agama Katolik,6,2,MKWK,Umum,Dasar,,,,
+NODE,UG234902,UG234902,Agama Kristen,6,2,MKWK,Umum,Dasar,,,,
+NODE,UG234906,UG234906,Agama Konghucu,6,2,MKWK,Umum,Dasar,,,,
+NODE,UG234913,UG234913,Kewarganegaraan,6,2,MKWK,Umum,Dasar,,,,
+NODE,UG234916,UG234916,Aplikasi Teknologi dan Transformasi Digital,6,3,MK Penciri ITS,Umum,Menengah,,,,
+NODE,ET234601,ET234601,Interaksi Manusia dan Komputer,6,3,Pengembangan Aplikasi,Core/MBKM,Menengah,,,,
+NODE,ET234602,ET234602,Pengembangan Sistem/Aplikasi (Capstone Project),6,3,Pengembangan Aplikasi,Core/MBKM,Lanjut,,,,
+NODE,ET234611,ET234611,Kuliah Kerja Nyata Tematik,6,3,MBKM,MBKM,Menengah,,,,
+NODE,ET234612,ET234612,Teknologi Multimedia,6,3,Pengembangan Aplikasi,Pilihan/MBKM,Menengah,,,,
+NODE,ET234614,ET234614,Operasional Pengembang,6,3,DevOps,Pilihan/MBKM,Lanjut,,,,
+NODE,ET234615,ET234615,Desain dan Manajemen Jaringan Komputer,6,3,Jaringan,Pilihan/MBKM,Lanjut,,,,
+NODE,ET234616,ET234616,Jaringan Nirkabel,6,3,Jaringan,Pilihan/MBKM,Lanjut,,,,
+NODE,ET234701,ET234701,Kerja Praktik,7,2,Praktik Industri,Core,Lanjut,,,,
+NODE,UG234911,UG234911,Pancasila,7,2,MKWK,Umum,Dasar,,,,
+NODE,UG234914,UG234914,Bahasa Inggris,7,2,Bahasa,Umum,Dasar,,,,
+NODE,UG234912,UG234912,Bahasa Indonesia,7,2,Bahasa,Umum,Dasar,,,,
+NODE,UG234915,UG234915,Kewirausahaan Berbasis Teknologi,7,2,Kewirausahaan,Umum,Menengah,,,,
+NODE,ET234718,ET234718,Skalabilitas dan Reliabilitas Sistem,7,3,Komputasi Awan,Pilihan,Lanjut,,,,
+NODE,ET234702,ET234702,Pra-TA / Metodologi Penulisan Ilmiah,7,2,Penelitian,Core,Menengah,,,,
+NODE,ET234703,ET234703,Manajemen Proyek,7,3,Manajemen Proyek,Core,Menengah,,,,
+NODE,ET234711,ET234711,Business Intelligence,7,3,Data,Pilihan,Lanjut,,,,
+NODE,ET234712,ET234712,Forensik Digital,7,3,Keamanan Siber,Pilihan,Lanjut,,,,
+NODE,ET234713,ET234713,Malware dan Cyber Threat Intelligence,7,3,Keamanan Siber,Pilihan,Lanjut,,,,
+NODE,ET234714,ET234714,Manajemen Keamanan Siber,7,3,Keamanan Siber,Pilihan,Lanjut,,,,
+NODE,ET234715,ET234715,Quantum Computing untuk Cybersecurity,7,3,Keamanan Siber,Pilihan,Lanjut,,,,
+NODE,ET234716,ET234716,Privasi/Perlindungan Data dan Ergonomi pada Cybersecurity,7,3,Keamanan Siber,Pilihan,Lanjut,,,,
+NODE,ET234717,ET234717,Audit Keamanan Informasi,7,3,Keamanan Siber,Pilihan,Lanjut,,,,
+NODE,ET234801,ET234801,Tugas Akhir,8,6,Tugas Akhir,Core,Akhir,,,,
+NODE,ET234811,ET234811,Pengadaan IT,8,3,Tata Kelola TI,Pilihan,Lanjut,,,,
+NODE,ET234812,ET234812,Penjaminan Kualitas TI,8,3,Tata Kelola TI,Pilihan,Lanjut,,,,
+NODE,ET234813,ET234813,Teknologi Blockchain,8,3,Keamanan Siber,Pilihan,Lanjut,,,,
+NODE,ET234814,ET234814,Sistem Cerdas,8,3,Sistem Cerdas,Pilihan,Lanjut,,,,
+NODE,ET234815,ET234815,Otomasi Sistem,8,3,Integrasi Sistem,Pilihan,Lanjut,,,,
+NODE,ET234816,ET234816,Keamanan Sistem Cyber-Physical dan Kota Cerdas,8,3,IoT dan Smart City,Pilihan,Lanjut,,,,
+NODE,ET234821,ET234821,Magang Bidang Keamanan Siber,8,2,Praktik Industri,Magang,Akhir,,,,
+NODE,ET234822,ET234822,Magang Bidang Pengembangan Aplikasi,8,2,Praktik Industri,Magang,Akhir,,,,
+NODE,ET234823,ET234823,Magang Bidang Kreasi Digital,8,2,Praktik Industri,Magang,Akhir,,,,
+EDGE,E001,ET234201,Sistem Operasi,2,4,Sistem Komputer,Core,Menengah,ET234102,Arsitektur dan Organisasi Komputer,OFFICIAL,TRUE
+EDGE,E002,SM234201,Kalkulus 2,2,3,Matematika,Core,Menengah,SM234101,Kalkulus 1,OFFICIAL,TRUE
+EDGE,E003,ET234203,Struktur Data dan Pemrograman Berorientasi Objek,2,3,Pemrograman,Core,Menengah,ET234103,Algoritma dan Teknik Pemrograman,OFFICIAL,TRUE
+EDGE,E004,ET234301,Ethical Hacking dan Uji Keamanan Siber,3,4,Keamanan Siber,Core,Lanjut,ET234201,Sistem Operasi,OFFICIAL,TRUE
+EDGE,E005,ET234303,Internet of Things,3,3,IoT dan Smart City,Core,Lanjut,ET234201,Sistem Operasi,OFFICIAL,TRUE
+EDGE,E006,ET234303,Internet of Things,3,3,IoT dan Smart City,Core,Lanjut,ET234103,Algoritma dan Teknik Pemrograman,OFFICIAL,TRUE
+EDGE,E007,ET234305,Pemrograman Web,3,4,Pengembangan Aplikasi,Core,Lanjut,ET234203,Struktur Data dan Pemrograman Berorientasi Objek,OFFICIAL,TRUE
+EDGE,E008,ET234306,Komunikasi Data dan Jaringan Komputer,3,4,Jaringan,Core,Lanjut,ET234201,Sistem Operasi,OFFICIAL,TRUE
+EDGE,E009,ET234404,Big Data dan Data Lakehouse,4,3,Data,Core,Lanjut,ET234204,Sistem Basis Data,OFFICIAL,TRUE
+EDGE,E010,ET234405,Kecerdasan Artifisial dan Machine Learning,4,4,Sistem Cerdas,Core,Lanjut,ET234101,Statistika dan Probabilitas,OFFICIAL,TRUE
+EDGE,E011,ET234502,Keamanan Web dan Aplikasi,5,3,Keamanan Siber,Core/Pengayaan,Lanjut,ET234305,Pemrograman Web,OFFICIAL,TRUE
+EDGE,E012,ET234505,Strategi Optimasi Komputasi Awan,5,3,Komputasi Awan,Core/Pengayaan,Lanjut,ET234403,Teknologi Komputasi Awan,OFFICIAL,TRUE
+EDGE,E013,ET234602,Pengembangan Sistem/Aplikasi (Capstone Project),6,3,Pengembangan Aplikasi,Core/MBKM,Lanjut,ET234305,Pemrograman Web,OFFICIAL,TRUE
+EDGE,E014,ET234615,Desain dan Manajemen Jaringan Komputer,6,3,Jaringan,Pilihan/MBKM,Lanjut,ET234306,Komunikasi Data dan Jaringan Komputer,OFFICIAL,TRUE
+EDGE,E015,ET234712,Forensik Digital,7,3,Keamanan Siber,Pilihan,Lanjut,ET234201,Sistem Operasi,OFFICIAL,TRUE
+EDGE,E016,ET234712,Forensik Digital,7,3,Keamanan Siber,Pilihan,Lanjut,ET234305,Pemrograman Web,OFFICIAL,TRUE
+EDGE,E017,ET234813,Teknologi Blockchain,8,3,Keamanan Siber,Pilihan,Lanjut,ET234501,Kriptografi,OFFICIAL,TRUE
+EDGE,E018,ET234814,Sistem Cerdas,8,3,Sistem Cerdas,Pilihan,Lanjut,ET234504,Teknologi Smartcity,OFFICIAL,TRUE
+EDGE,E019,ET234305,Pemrograman Web,3,4,Pengembangan Aplikasi,Core,Lanjut,ET234103,Algoritma dan Teknik Pemrograman,PROJECT_INFERRED,FALSE
+EDGE,E020,ET234506,Pemrograman Mobile,5,3,Pengembangan Aplikasi,Core/Pengayaan,Lanjut,ET234203,Struktur Data dan Pemrograman Berorientasi Objek,PROJECT_INFERRED,FALSE
+EDGE,E021,ET234506,Pemrograman Mobile,5,3,Pengembangan Aplikasi,Core/Pengayaan,Lanjut,ET234305,Pemrograman Web,PROJECT_INFERRED,FALSE
+EDGE,E022,ET234711,Business Intelligence,7,3,Data,Pilihan,Lanjut,ET234204,Sistem Basis Data,PROJECT_INFERRED,FALSE
+EDGE,E023,ET234711,Business Intelligence,7,3,Data,Pilihan,Lanjut,ET234404,Big Data dan Data Lakehouse,PROJECT_INFERRED,FALSE
+EDGE,E024,ET234711,Business Intelligence,7,3,Data,Pilihan,Lanjut,ET234101,Statistika dan Probabilitas,PROJECT_INFERRED,FALSE
+EDGE,E025,ET234814,Sistem Cerdas,8,3,Sistem Cerdas,Pilihan,Lanjut,ET234405,Kecerdasan Artifisial dan Machine Learning,PROJECT_INFERRED,FALSE
+EDGE,E026,ET234504,Teknologi Smartcity,5,4,IoT dan Smart City,Core/Pengayaan,Lanjut,ET234303,Internet of Things,PROJECT_INFERRED,FALSE
+EDGE,E027,ET234816,Keamanan Sistem Cyber-Physical dan Kota Cerdas,8,3,IoT dan Smart City,Pilihan,Lanjut,ET234303,Internet of Things,PROJECT_INFERRED,FALSE
+EDGE,E028,ET234816,Keamanan Sistem Cyber-Physical dan Kota Cerdas,8,3,IoT dan Smart City,Pilihan,Lanjut,ET234504,Teknologi Smartcity,PROJECT_INFERRED,FALSE
+EDGE,E029,ET234616,Jaringan Nirkabel,6,3,Jaringan,Pilihan/MBKM,Lanjut,ET234306,Komunikasi Data dan Jaringan Komputer,PROJECT_INFERRED,FALSE
+EDGE,E030,ET234615,Desain dan Manajemen Jaringan Komputer,6,3,Jaringan,Pilihan/MBKM,Lanjut,ET234302,Keamanan Jaringan Komputer,PROJECT_INFERRED,FALSE
+EDGE,E031,ET234717,Audit Keamanan Informasi,7,3,Keamanan Siber,Pilihan,Lanjut,ET234302,Keamanan Jaringan Komputer,PROJECT_INFERRED,FALSE
+EDGE,E032,ET234714,Manajemen Keamanan Siber,7,3,Keamanan Siber,Pilihan,Lanjut,ET234401,Manajemen Insiden Keamanan Siber,PROJECT_INFERRED,FALSE
+EDGE,E033,ET234714,Manajemen Keamanan Siber,7,3,Keamanan Siber,Pilihan,Lanjut,ET234402,Security Operations Center,PROJECT_INFERRED,FALSE
+EDGE,E034,ET234713,Malware dan Cyber Threat Intelligence,7,3,Keamanan Siber,Pilihan,Lanjut,ET234301,Ethical Hacking dan Uji Keamanan Siber,PROJECT_INFERRED,FALSE
+EDGE,E035,ET234713,Malware dan Cyber Threat Intelligence,7,3,Keamanan Siber,Pilihan,Lanjut,ET234302,Keamanan Jaringan Komputer,PROJECT_INFERRED,FALSE
+EDGE,E036,ET234718,Skalabilitas dan Reliabilitas Sistem,7,3,Komputasi Awan,Pilihan,Lanjut,ET234403,Teknologi Komputasi Awan,PROJECT_INFERRED,FALSE
+EDGE,E037,ET234718,Skalabilitas dan Reliabilitas Sistem,7,3,Komputasi Awan,Pilihan,Lanjut,ET234505,Strategi Optimasi Komputasi Awan,PROJECT_INFERRED,FALSE
+EDGE,E038,ET234602,Pengembangan Sistem/Aplikasi (Capstone Project),6,3,Pengembangan Aplikasi,Core/MBKM,Lanjut,ET234406,Integrasi Sistem,PROJECT_INFERRED,FALSE
+EDGE,E039,ET234801,Tugas Akhir,8,6,Tugas Akhir,Core,Akhir,ET234702,Pra-TA / Metodologi Penulisan Ilmiah,PROJECT_INFERRED,FALSE
+EDGE,E040,ET234801,Tugas Akhir,8,6,Tugas Akhir,Core,Akhir,ET234602,Pengembangan Sistem/Aplikasi (Capstone Project),PROJECT_INFERRED,FALSE

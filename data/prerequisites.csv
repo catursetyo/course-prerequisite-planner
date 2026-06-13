@@ -1,0 +1,41 @@
+edge_id,prerequisite_code,prerequisite_name,course_code,course_name,relation_type,is_official,edge_direction,relation_reason
+E001,ET234102,Arsitektur dan Organisasi Komputer,ET234201,Sistem Operasi,OFFICIAL,TRUE,prerequisite_code -> course_code,Prasyarat resmi: Sistem Operasi mensyaratkan Arsitektur dan Organisasi Komputer
+E002,SM234101,Kalkulus 1,SM234201,Kalkulus 2,OFFICIAL,TRUE,prerequisite_code -> course_code,Prasyarat resmi: Kalkulus 2 mensyaratkan Kalkulus/Matematika 1
+E003,ET234103,Algoritma dan Teknik Pemrograman,ET234203,Struktur Data dan Pemrograman Berorientasi Objek,OFFICIAL,TRUE,prerequisite_code -> course_code,Prasyarat resmi: Struktur Data dan PBO mensyaratkan Algoritma dan Teknik Pemrograman
+E004,ET234201,Sistem Operasi,ET234301,Ethical Hacking dan Uji Keamanan Siber,OFFICIAL,TRUE,prerequisite_code -> course_code,Prasyarat resmi: Ethical Hacking dan Uji Keamanan Siber mensyaratkan Sistem Operasi
+E005,ET234201,Sistem Operasi,ET234303,Internet of Things,OFFICIAL,TRUE,prerequisite_code -> course_code,Prasyarat resmi: Internet of Things mensyaratkan Sistem Operasi
+E006,ET234103,Algoritma dan Teknik Pemrograman,ET234303,Internet of Things,OFFICIAL,TRUE,prerequisite_code -> course_code,Prasyarat resmi: Internet of Things mensyaratkan Algoritma dan Teknik Pemrograman
+E007,ET234203,Struktur Data dan Pemrograman Berorientasi Objek,ET234305,Pemrograman Web,OFFICIAL,TRUE,prerequisite_code -> course_code,Prasyarat resmi: Pemrograman Web mensyaratkan Struktur Data dan PBO
+E008,ET234201,Sistem Operasi,ET234306,Komunikasi Data dan Jaringan Komputer,OFFICIAL,TRUE,prerequisite_code -> course_code,Prasyarat resmi: Komunikasi Data dan Jaringan Komputer mensyaratkan Sistem Operasi
+E009,ET234204,Sistem Basis Data,ET234404,Big Data dan Data Lakehouse,OFFICIAL,TRUE,prerequisite_code -> course_code,Prasyarat resmi: Big Data dan Data Lakehouse mensyaratkan Sistem Basis Data
+E010,ET234101,Statistika dan Probabilitas,ET234405,Kecerdasan Artifisial dan Machine Learning,OFFICIAL,TRUE,prerequisite_code -> course_code,Prasyarat resmi: AI dan Machine Learning mensyaratkan Statistika dan Probabilitas
+E011,ET234305,Pemrograman Web,ET234502,Keamanan Web dan Aplikasi,OFFICIAL,TRUE,prerequisite_code -> course_code,Prasyarat resmi: Keamanan Web dan Aplikasi mensyaratkan Pemrograman Web
+E012,ET234403,Teknologi Komputasi Awan,ET234505,Strategi Optimasi Komputasi Awan,OFFICIAL,TRUE,prerequisite_code -> course_code,Prasyarat resmi: Strategi Optimasi Komputasi Awan mensyaratkan Teknologi Komputasi Awan
+E013,ET234305,Pemrograman Web,ET234602,Pengembangan Sistem/Aplikasi (Capstone Project),OFFICIAL,TRUE,prerequisite_code -> course_code,Prasyarat resmi: Capstone Project mensyaratkan Pemrograman Web
+E014,ET234306,Komunikasi Data dan Jaringan Komputer,ET234615,Desain dan Manajemen Jaringan Komputer,OFFICIAL,TRUE,prerequisite_code -> course_code,Prasyarat resmi: Desain dan Manajemen Jaringan Komputer mensyaratkan Komunikasi Data dan Jaringan Komputer
+E015,ET234201,Sistem Operasi,ET234712,Forensik Digital,OFFICIAL,TRUE,prerequisite_code -> course_code,Prasyarat resmi: Forensik Digital mensyaratkan Sistem Operasi
+E016,ET234305,Pemrograman Web,ET234712,Forensik Digital,OFFICIAL,TRUE,prerequisite_code -> course_code,Prasyarat resmi: Forensik Digital mensyaratkan Pemrograman Web
+E017,ET234501,Kriptografi,ET234813,Teknologi Blockchain,OFFICIAL,TRUE,prerequisite_code -> course_code,Prasyarat resmi: Teknologi Blockchain mensyaratkan Kriptografi
+E018,ET234504,Teknologi Smartcity,ET234814,Sistem Cerdas,OFFICIAL,TRUE,prerequisite_code -> course_code,Prasyarat resmi: Sistem Cerdas mensyaratkan Teknologi Smartcity
+E019,ET234103,Algoritma dan Teknik Pemrograman,ET234305,Pemrograman Web,PROJECT_INFERRED,FALSE,prerequisite_code -> course_code,Relasi simulasi: Pemrograman Web membutuhkan dasar algoritma dan pemrograman
+E020,ET234203,Struktur Data dan Pemrograman Berorientasi Objek,ET234506,Pemrograman Mobile,PROJECT_INFERRED,FALSE,prerequisite_code -> course_code,Relasi simulasi: Pemrograman Mobile membutuhkan OOP dan struktur data
+E021,ET234305,Pemrograman Web,ET234506,Pemrograman Mobile,PROJECT_INFERRED,FALSE,prerequisite_code -> course_code,Relasi simulasi: Pemrograman Mobile berkaitan dengan pengembangan aplikasi setelah Web Programming
+E022,ET234204,Sistem Basis Data,ET234711,Business Intelligence,PROJECT_INFERRED,FALSE,prerequisite_code -> course_code,Relasi simulasi: Business Intelligence membutuhkan dasar basis data
+E023,ET234404,Big Data dan Data Lakehouse,ET234711,Business Intelligence,PROJECT_INFERRED,FALSE,prerequisite_code -> course_code,Relasi simulasi: Business Intelligence berkaitan dengan Big Data dan Data Lakehouse
+E024,ET234101,Statistika dan Probabilitas,ET234711,Business Intelligence,PROJECT_INFERRED,FALSE,prerequisite_code -> course_code,Relasi simulasi: Business Intelligence membutuhkan statistika dasar
+E025,ET234405,Kecerdasan Artifisial dan Machine Learning,ET234814,Sistem Cerdas,PROJECT_INFERRED,FALSE,prerequisite_code -> course_code,Relasi simulasi: Sistem Cerdas membutuhkan AI dan Machine Learning
+E026,ET234303,Internet of Things,ET234504,Teknologi Smartcity,PROJECT_INFERRED,FALSE,prerequisite_code -> course_code,Relasi simulasi: Teknologi Smartcity berkaitan dengan Internet of Things
+E027,ET234303,Internet of Things,ET234816,Keamanan Sistem Cyber-Physical dan Kota Cerdas,PROJECT_INFERRED,FALSE,prerequisite_code -> course_code,Relasi simulasi: Cyber-Physical System Security berkaitan dengan Internet of Things
+E028,ET234504,Teknologi Smartcity,ET234816,Keamanan Sistem Cyber-Physical dan Kota Cerdas,PROJECT_INFERRED,FALSE,prerequisite_code -> course_code,Relasi simulasi: Cyber-Physical System Security and Smart Cities berkaitan dengan Smartcity
+E029,ET234306,Komunikasi Data dan Jaringan Komputer,ET234616,Jaringan Nirkabel,PROJECT_INFERRED,FALSE,prerequisite_code -> course_code,Relasi simulasi: Jaringan Nirkabel membutuhkan dasar komunikasi data dan jaringan
+E030,ET234302,Keamanan Jaringan Komputer,ET234615,Desain dan Manajemen Jaringan Komputer,PROJECT_INFERRED,FALSE,prerequisite_code -> course_code,Relasi simulasi: Desain dan Manajemen Jaringan membutuhkan dasar keamanan jaringan
+E031,ET234302,Keamanan Jaringan Komputer,ET234717,Audit Keamanan Informasi,PROJECT_INFERRED,FALSE,prerequisite_code -> course_code,Relasi simulasi: Audit Keamanan Informasi membutuhkan dasar keamanan jaringan komputer
+E032,ET234401,Manajemen Insiden Keamanan Siber,ET234714,Manajemen Keamanan Siber,PROJECT_INFERRED,FALSE,prerequisite_code -> course_code,Relasi simulasi: Manajemen Keamanan Siber membutuhkan manajemen insiden
+E033,ET234402,Security Operations Center,ET234714,Manajemen Keamanan Siber,PROJECT_INFERRED,FALSE,prerequisite_code -> course_code,Relasi simulasi: Manajemen Keamanan Siber membutuhkan SOC
+E034,ET234301,Ethical Hacking dan Uji Keamanan Siber,ET234713,Malware dan Cyber Threat Intelligence,PROJECT_INFERRED,FALSE,prerequisite_code -> course_code,Relasi simulasi: Malware dan CTI membutuhkan dasar ethical hacking
+E035,ET234302,Keamanan Jaringan Komputer,ET234713,Malware dan Cyber Threat Intelligence,PROJECT_INFERRED,FALSE,prerequisite_code -> course_code,Relasi simulasi: Malware dan CTI membutuhkan dasar keamanan jaringan komputer
+E036,ET234403,Teknologi Komputasi Awan,ET234718,Skalabilitas dan Reliabilitas Sistem,PROJECT_INFERRED,FALSE,prerequisite_code -> course_code,Relasi simulasi: Skalabilitas dan Reliabilitas Sistem membutuhkan komputasi awan
+E037,ET234505,Strategi Optimasi Komputasi Awan,ET234718,Skalabilitas dan Reliabilitas Sistem,PROJECT_INFERRED,FALSE,prerequisite_code -> course_code,Relasi simulasi: Skalabilitas dan Reliabilitas Sistem membutuhkan optimasi komputasi awan
+E038,ET234406,Integrasi Sistem,ET234602,Pengembangan Sistem/Aplikasi (Capstone Project),PROJECT_INFERRED,FALSE,prerequisite_code -> course_code,Relasi simulasi: Capstone Project membutuhkan integrasi sistem
+E039,ET234702,Pra-TA / Metodologi Penulisan Ilmiah,ET234801,Tugas Akhir,PROJECT_INFERRED,FALSE,prerequisite_code -> course_code,Relasi simulasi: Tugas Akhir membutuhkan Pra-TA/Metodologi Penulisan Ilmiah
+E040,ET234602,Pengembangan Sistem/Aplikasi (Capstone Project),ET234801,Tugas Akhir,PROJECT_INFERRED,FALSE,prerequisite_code -> course_code,Relasi simulasi: Tugas Akhir didukung pengalaman Capstone Project
