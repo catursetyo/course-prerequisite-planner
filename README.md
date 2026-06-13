@@ -1,11 +1,12 @@
 # Course Prerequisite Planner
 
-Data Structure and OOP Final Project, Topic 9: Course Prerequisite Planner.
+Data Structure and OOP Final Project
+Topic 9: Course Prerequisite Planner.
 
 ## Folder Structure
 
 ```text
-FP_Strukdat_KelompokXX/
+FP_Strukdat_Kelompok9/
 ├── src/
 │   ├── Main.java
 │   ├── graph/
@@ -25,7 +26,7 @@ FP_Strukdat_KelompokXX/
 
 ## How to Compile
 
-Run this from the `FP_Strukdat_KelompokXX` folder:
+Run this from the root project folder:
 
 ```bash
 javac -d out src/Main.java src/model/Course.java src/graph/CourseGraph.java src/tree/Trie.java src/tree/TrieNode.java
