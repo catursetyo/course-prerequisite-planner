@@ -346,18 +346,27 @@ Analisis kompleksitas waktu (Time Complexity) dan ruang (Space Complexity) dari 
 * **Struktur Trie:** Memerlukan ruang memori sebesar **$O(\Sigma \times L \times N)$**, di mana $\Sigma$ adalah ukuran alfabet karakter, $L$ adalah panjang rata-rata string, dan $N$ adalah jumlah data yang diindeks.
 * **Struktur Graph:** Penggunaan *Adjacency List* berbasis `LinkedHashMap` sangat efisien dengan kompleksitas ruang **$O(V + E)$**. Memori yang dialokasikan hanya berbanding lurus dengan jumlah data mata kuliah dan relasi riil yang ada, bukan kuadratik ($O(V^2)$).
 
-## What if analysis
+## What-If Analysis
 
-Analisis skenario kasus khusus (*What-if Analysis*) untuk menguji ketahanan dan integritas struktur data kurikulum:
+### What-If 1: Bagaimana jika dataset bertambah sangat besar (V = 1000, E = 5000)?
 
-### a) Bagaimana jika terjadi hubungan prasyarat melingkar (Cycle Dependency)?
-Jika pengguna mencoba memaksa memasukkan relasi yang berputar balik (misal: A butuh B, dan B butuh A), sistem melalui fungsi `hasCycleDfs` akan mendeteksi tumpukan rekursif yang kembali ke node asal. Sistem akan **langsung menolak relasi tersebut, menampilkan pesan error, dan melakukan rollback otomatis** di dalam memori sehingga struktur graf tetap menjadi DAG (*Directed Acyclic Graph*).
+Algoritma yang digunakan (DFS, BFS/Kahn, Trie) semuanya berskala linear terhadap V dan E, sehingga program masih mampu menangani dataset yang jauh lebih besar tanpa perubahan algoritma. Bottleneck yang mungkin muncul adalah proses load prerequisites karena setiap edge dilakukan cycle check O(V+E), sehingga total load menjadi O(E × (V+E)). Untuk dataset besar, validasi cycle sebaiknya dilakukan sekali setelah semua data dimuat, bukan per edge.
 
-### b) Bagaimana jika ditambahkan mata kuliah mandiri tanpa prasyarat (Isolated Node)?
-Mata kuliah terisolasi (seperti mata kuliah umum Pancasila atau Agama) akan terdaftar sebagai vertex dengan derajat masuk (*in-degree*) bernilai 0. Saat *Kahn's Algorithm* dijalankan, node ini akan **langsung masuk ke antrean awal (Queue)** pada iterasi pertama, sehingga posisinya otomatis direkomendasikan untuk diambil pada semester-semester awal.
+### What-If 2: Bagaimana jika ada mata kuliah dengan lebih dari satu jalur prasyarat?
 
-### c) Bagaimana jika mata kuliah yang menjadi prasyarat utama dihapus dari sistem?
-Jika sebuah mata kuliah dasar dihapus, sistem akan membaca *Reverse Adjacency List* untuk melakukan operasi pembersihan berantai (*cascade deletion*). Sistem akan **menghapus node tersebut sekaligus menghapus seluruh edge berarah yang terhubung dengannya** di semua list tetangga agar tidak meninggalkan pointer rusak (*dangling edges*).
+Program sudah mendukung skenario ini karena `reverseAdjacencyList` menyimpan semua prasyarat langsung dari suatu mata kuliah dalam bentuk list. DFS akan menelusuri semua jalur prasyarat secara rekursif, sehingga seluruh rantai prasyarat pada multiple path akan ditemukan tanpa masalah.
+
+### What-If 3: Bagaimana jika dosen meminta data tersimpan permanen setelah add/update/delete?
+
+Saat ini perubahan hanya berlaku di memori selama program berjalan. Jika diminta persistent storage, perlu ditambahkan method `saveCoursesToCsv()` dan `savePrerequisitesToCsv()` yang menuliskan ulang seluruh data dari Map ke file CSV. Perubahan pada struktur graph tidak berdampak karena data utama tetap disimpan di `courses` dan kedua adjacency list.
+
+### What-If 4: Bagaimana jika graph memiliki banyak mata kuliah tanpa prasyarat (indegree 0)?
+
+Topological Sort dengan Kahn's Algorithm menangani ini secara alami. Semua node dengan indegree 0 dimasukkan ke queue di awal, dan diproses secara berurutan. Tidak ada perubahan yang diperlukan pada algoritma; hanya urutan output yang mungkin berbeda tergantung urutan data di queue.
+
+### What-If 5: Bagaimana jika pengguna melakukan search dengan prefix yang sangat panjang dan tidak ada hasilnya?
+
+Trie menangani ini dengan traversal per karakter. Jika pada titik tertentu tidak ditemukan karakter yang sesuai di node Trie, pencarian langsung berhenti dan mengembalikan list kosong. Tidak ada iterasi yang sia-sia ke seluruh dataset
 
 
 ## Kesimpulan
