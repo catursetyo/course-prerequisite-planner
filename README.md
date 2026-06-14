@@ -332,3 +332,43 @@ f) **Iterasi Kelima**
 ### Kesimpulan Tracing:
 Hasil pelacakan antrean secara manual membuktikan bahwa urutan mata kuliah yang direkomendasikan oleh Kahn's Algorithm berjalan 100% valid secara akademik kurikulum. Seorang mahasiswa secara logis dipandu untuk menyelesaikan fondasi pemrograman (`ET234103` & `ET234203`) terlebih dahulu sebelum diperkenankan mengambil mata kuliah lanjut keamanan tingkat tinggi seperti Manajemen Insiden (`ET234401`).
 
+
+## Analisis kompleksitas
+
+Analisis kompleksitas waktu (Time Complexity) dan ruang (Space Complexity) dari struktur data dan algoritma yang diimplementasikan pada sistem *Course Prerequisite Planner*:
+
+### a) Kompleksitas Waktu (Time Complexity)
+* **Penyisipan dan Pencarian pada Trie:** Operasi `insert` membutuhkan waktu **$O(L)$**, di mana $L$ adalah panjang karakter dari string nama atau kode mata kuliah. Operasi pencarian prefix `searchByPrefix` membutuhkan waktu **$O(P + K)$**, dengan $P$ sebagai panjang prefix dan $K$ sebagai jumlah kode mata kuliah yang cocok di bawah sub-tree tersebut.
+* **Operasi Graph (Adjacency List):** Menampilkan seluruh struktur kurikulum membutuhkan waktu **$O(V + E)$**, di mana $V$ adalah total mata kuliah (70 node) dan $E$ adalah total hubungan prasyarat (40 edge). Pencarian prasyarat langsung menggunakan *Reverse Adjacency List* berjalan sangat cepat dengan kompleksitas rata-rata **$O(1)$** saat mengakses key map.
+* **Algoritma Utama:** Algoritma deteksi siklus (`hasCycleDfs`) memiliki kompleksitas **$O(V + E)$** karena menelusuri setiap mata kuliah menggunakan DFS rekursif. Algoritma rekomendasi urutan kuliah (*Kahn's Algorithm*) juga memiliki kompleksitas **$O(V + E)$** untuk menghitung *in-degree* awal dan memproses antrean node secara linear.
+
+### b) Kompleksitas Ruang (Space Complexity)
+* **Struktur Trie:** Memerlukan ruang memori sebesar **$O(\Sigma \times L \times N)$**, di mana $\Sigma$ adalah ukuran alfabet karakter, $L$ adalah panjang rata-rata string, dan $N$ adalah jumlah data yang diindeks.
+* **Struktur Graph:** Penggunaan *Adjacency List* berbasis `LinkedHashMap` sangat efisien dengan kompleksitas ruang **$O(V + E)$**. Memori yang dialokasikan hanya berbanding lurus dengan jumlah data mata kuliah dan relasi riil yang ada, bukan kuadratik ($O(V^2)$).
+
+## What if analysis
+
+Analisis skenario kasus khusus (*What-if Analysis*) untuk menguji ketahanan dan integritas struktur data kurikulum:
+
+### a) Bagaimana jika terjadi hubungan prasyarat melingkar (Cycle Dependency)?
+Jika pengguna mencoba memaksa memasukkan relasi yang berputar balik (misal: A butuh B, dan B butuh A), sistem melalui fungsi `hasCycleDfs` akan mendeteksi tumpukan rekursif yang kembali ke node asal. Sistem akan **langsung menolak relasi tersebut, menampilkan pesan error, dan melakukan rollback otomatis** di dalam memori sehingga struktur graf tetap menjadi DAG (*Directed Acyclic Graph*).
+
+### b) Bagaimana jika ditambahkan mata kuliah mandiri tanpa prasyarat (Isolated Node)?
+Mata kuliah terisolasi (seperti mata kuliah umum Pancasila atau Agama) akan terdaftar sebagai vertex dengan derajat masuk (*in-degree*) bernilai 0. Saat *Kahn's Algorithm* dijalankan, node ini akan **langsung masuk ke antrean awal (Queue)** pada iterasi pertama, sehingga posisinya otomatis direkomendasikan untuk diambil pada semester-semester awal.
+
+### c) Bagaimana jika mata kuliah yang menjadi prasyarat utama dihapus dari sistem?
+Jika sebuah mata kuliah dasar dihapus, sistem akan membaca *Reverse Adjacency List* untuk melakukan operasi pembersihan berantai (*cascade deletion*). Sistem akan **menghapus node tersebut sekaligus menghapus seluruh edge berarah yang terhubung dengannya** di semua list tetangga agar tidak meninggalkan pointer rusak (*dangling edges*).
+
+
+## Kesimpulan
+
+Berdasarkan hasil perancangan, implementasi, dan pengujian yang telah dilakukan pada sistem *Course Prerequisite Planner*, dapat disimpulkan bahwa:
+
+a) **Efektivitas Integrasi Struktur Data**
+   Penggunaan struktur data *Directed Graph* (dengan *Adjacency List*) sangat tepat untuk merepresentasikan hubungan ketergantungan mata kuliah yang bersifat hirarkis dan berarah. Integrasi struktur data *Trie* sebagai mesin pencari hibrida terbukti mempercepat akses data pencarian mata kuliah berdasarkan *prefix* kode atau nama secara efisien ($O(L)$), memenuhi kebutuhan fitur *Search* yang diwajibkan dalam syarat proyek.
+
+b) **Ketangguhan Algoritma dalam Pemecahan Masalah**
+   Implementasi *Kahn's Algorithm* terbukti mampu menghasilkan rekomendasi urutan pengambilan mata kuliah yang valid dan bebas dari konflik prasyarat. Selain itu, penggunaan *Depth-First Search* (DFS) untuk *Cycle Detection* berfungsi sebagai mekanisme *filter* keamanan kurikulum yang krusial, memastikan integritas data tetap terjaga dengan menolak setiap skenario hubungan prasyarat melingkar (*cycle*) yang tidak valid secara akademik.
+
+c) **Kesesuaian dengan Ketentuan Proyek**
+   Sistem telah berhasil memenuhi seluruh parameter penilaian yang ditetapkan oleh dosen, mencakup penggunaan minimal 1 *Tree*, 1 *Graph*, 2 algoritma *Graph*, sertadataset buatan sendiri yang melampaui ambang batas minimal (70 *node* dan 40 *edge*). Dengan penanganan *edge case* dan analisis kompleksitas yang komprehensif, aplikasi ini layak dioperasikan sebagai alat bantu simulasi perencanaan studi yang adaptif, logis, dan solutif.
