@@ -78,8 +78,8 @@ Program dibuat dalam bentuk CLI sehingga pengguna dapat memilih fitur melalui me
 
 Dataset disimpan dalam file CSV, bukan hardcoded di dalam kode Java. File utama yang digunakan adalah:
 
-data/courses.csv
-data/prerequisites.csv
+```data/courses.csv
+data/prerequisites.csv```
 
 Berdasarkan dokumentasi implementasi project, dataset berisi :
 
