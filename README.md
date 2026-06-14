@@ -92,7 +92,7 @@ Berdasarkan dokumentasi implementasi project, dataset berisi :
 
 Jumlah tersebut sudah memenuhi requirement minimal, yaitu minimal 25 node/vertex dan 40 edge/relasi prasyarat.
 
-Data mata kuliah dibaca dari courses.csv, sedangkan data relasi prasyarat dibaca dari prerequisites.csv. Program membaca data tersebut saat runtime menggunakan class CourseGraph
+Data mata kuliah dibaca dari ```courses.csv```, sedangkan data relasi prasyarat dibaca dari ```prerequisites.csv```. Program membaca data tersebut saat runtime menggunakan class CourseGraph
 
 Contoh format data mata kuliah:
 
@@ -135,23 +135,25 @@ Struktur graph yang digunakan adalah Directed Graph.
 
 Pada program, node merepresentasikan mata kuliah, sedangkan edge merepresentasikan relasi prasyarat. Arah edge adalah:
 
-prerequisite_code -> course_code
+```prerequisite_code -> course_code```
 
 Artinya:
 
-A -> B
+```A -> B```
 
 berarti mata kuliah A adalah prasyarat untuk mata kuliah B.
 
 Implementasi graph berada pada file:
 
-src/graph/CourseGraph.java
+```src/graph/CourseGraph.java```
 
 Struktur data utama yang digunakan dalam CourseGraph adalah:
 
+```bash
 Map<String, Course> courses;
 Map<String, List<String>> adjacencyList;
 Map<String, List<String>> reverseAdjacencyList;
+```
 
 Fungsi masing-masing struktur:
 
@@ -169,21 +171,25 @@ Struktur tree yang digunakan adalah Trie.
 
 Trie digunakan untuk fitur pencarian mata kuliah berdasarkan prefix kode atau nama. Implementasinya berada pada:
 
+```bash
 src/tree/Trie.java
 src/tree/TrieNode.java
+```
 
 Pada program, kode dan nama mata kuliah dimasukkan ke Trie. Setiap node pada Trie menyimpan kumpulan kode mata kuliah yang memiliki prefix tersebut.
 
 Contoh:
 
-Input prefix: ET234
+```Input prefix: ET234```
 
-Program akan mencari semua mata kuliah yang kode atau namanya diawali dengan ET234.
+Program akan mencari semua mata kuliah yang kode atau namanya diawali dengan ```ET234.```
 
 Method utama pada Trie:
 
+```bash
 insert(String key, String courseCode)
 searchByPrefix(String prefix)
+```
 
 Program melakukan normalisasi input dengan mengubah teks menjadi lowercase dan menghapus spasi di awal/akhir. Setelah prefix ditemukan, program mengembalikan kumpulan kode mata kuliah yang cocok.
 
@@ -191,16 +197,18 @@ Program melakukan normalisasi input dengan mengubah teks menjadi lowercase dan m
 
 **a. DFS untuk Menampilkan Semua Prasyarat**
 
-DFS digunakan untuk mencari semua prasyarat dari suatu mata kuliah. Program menelusuri reverseAdjacencyList, karena struktur tersebut menyimpan relasi dari mata kuliah ke prasyaratnya
+DFS digunakan untuk mencari semua prasyarat dari suatu mata kuliah. Program menelusuri ```reverseAdjacencyList```, karena struktur tersebut menyimpan relasi dari mata kuliah ke prasyaratnya
 
 Contoh :
 
-ET234103 -> ET234203 -> ET234305
+```ET234103 -> ET234203 -> ET234305```
 
-Jika dicari semua prasyarat dari ET234305, maka hasilnya adalah:
+Jika dicari semua prasyarat dari ```ET234305```, maka hasilnya adalah:
 
+```bash
 ET234203
 ET234103
+```
 
 **b. Cycle Detection**
 
@@ -214,8 +222,10 @@ Cycle detection digunakan untuk mendeteksi konflik prasyarat. Program menggunaka
 
 Jika saat DFS ditemukan node dengan status 1, maka graph memiliki cycle.
 
+```bash
 A -> B
 B -> A
+```
 
 Relasi tersebut tidak valid karena A membutuhkan B, tetapi B juga membutuhkan A.
 
@@ -232,7 +242,7 @@ Langkah umumnya:
 5. Jika indegree menjadi 0, masukkan ke queue.
 6. Ulangi sampai semua mata kuliah diproses.
 
-Jika graph memiliki cycle, program tidak menjalankan topological sort karena urutan pengambilan mata kuliah tidak valid. Implementasi topologicalSort() pada CourseGraph memanggil hasCycle() terlebih dahulu.
+Jika graph memiliki cycle, program tidak menjalankan topological sort karena urutan pengambilan mata kuliah tidak valid. Implementasi ```topologicalSort()``` pada ```CourseGraph``` memanggil ```hasCycle()``` terlebih dahulu.
 
 ## Design Decision Log
 
