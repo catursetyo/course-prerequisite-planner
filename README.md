@@ -3,7 +3,7 @@
 Data Structure and OOP Final Project
 Topic 9: Course Prerequisite Planner.
 
-Project ini merupakan aplikasi berbasis Java CLI untuk membantu menentukan urutan pengambilan mata kuliah berdasarkan hubungan prasyarat. Project menggunakan struktur data Directed Graph untuk relasi prasyarat dan Trie untuk pencarian mata kuliah berdasarkan prefix kode atau nama. Struktur folder repo menunjukkan file utama berada di src/Main.java, src/graph/CourseGraph.java, src/tree/Trie.java, src/tree/TrieNode.java, dan src/model/Course.java
+Project ini merupakan aplikasi berbasis Java CLI untuk membantu menentukan urutan pengambilan mata kuliah berdasarkan hubungan prasyarat. Project menggunakan struktur data Directed Graph untuk relasi prasyarat dan Trie untuk pencarian mata kuliah berdasarkan prefix kode atau nama. Struktur folder repo menunjukkan file utama berada di ```bash src/Main.java, src/graph/CourseGraph.java, src/tree/Trie.java, src/tree/TrieNode.java, dan src/model/Course.java```
 
 ## Folder Structure
 
