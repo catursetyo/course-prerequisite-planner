@@ -55,7 +55,7 @@ java -cp out Main data/courses.csv data/prerequisites.csv
 
 1. Catur Setyo Ragil - 502725066
 2. Aura Syahzanani A - 5027251123
-3. ....
+3. Donnavie Aulia - 5027251093
 4. ....
 5. .....
 
@@ -348,25 +348,77 @@ Analisis kompleksitas waktu (Time Complexity) dan ruang (Space Complexity) dari 
 
 ## What-If Analysis
 
-### What-If 1: Bagaimana jika dataset bertambah sangat besar (V = 1000, E = 5000)?
+### 1. Apa yang terjadi jika jumlah node naik dari 25 menjadi 10.000?
 
-Algoritma yang digunakan (DFS, BFS/Kahn, Trie) semuanya berskala linear terhadap V dan E, sehingga program masih mampu menangani dataset yang jauh lebih besar tanpa perubahan algoritma. Bottleneck yang mungkin muncul adalah proses load prerequisites karena setiap edge dilakukan cycle check O(V+E), sehingga total load menjadi O(E × (V+E)). Untuk dataset besar, validasi cycle sebaiknya dilakukan sekali setelah semua data dimuat, bukan per edge.
+Semua algoritma utama yang digunakan berskala linear terhadap V dan E:
+- DFS prasyarat: O(V + E)
+- Cycle Detection: O(V + E)
+- Topological Sort: O(V + E)
 
-### What-If 2: Bagaimana jika ada mata kuliah dengan lebih dari satu jalur prasyarat?
+Dengan 10.000 node, algoritma-algoritma ini masih efisien. Bottleneck yang mungkin muncul adalah proses load `prerequisites.csv` karena setiap edge dilakukan cycle check O(V + E), sehingga total load menjadi O(E × (V + E)). Untuk dataset sebesar itu, sebaiknya validasi cycle dilakukan sekali setelah semua data selesai dimuat, bukan per edge.
 
-Program sudah mendukung skenario ini karena `reverseAdjacencyList` menyimpan semua prasyarat langsung dari suatu mata kuliah dalam bentuk list. DFS akan menelusuri semua jalur prasyarat secara rekursif, sehingga seluruh rantai prasyarat pada multiple path akan ditemukan tanpa masalah.
+Trie juga tetap efisien karena pencarian prefix hanya bergantung pada panjang string O(L), bukan jumlah node.
 
-### What-If 3: Bagaimana jika dosen meminta data tersimpan permanen setelah add/update/delete?
+---
 
-Saat ini perubahan hanya berlaku di memori selama program berjalan. Jika diminta persistent storage, perlu ditambahkan method `saveCoursesToCsv()` dan `savePrerequisitesToCsv()` yang menuliskan ulang seluruh data dari Map ke file CSV. Perubahan pada struktur graph tidak berdampak karena data utama tetap disimpan di `courses` dan kedua adjacency list.
+### 2. Apa yang terjadi jika edge tertentu dihapus?
 
-### What-If 4: Bagaimana jika graph memiliki banyak mata kuliah tanpa prasyarat (indegree 0)?
+Program sudah mendukung penghapusan mata kuliah (menu 11) yang otomatis menghapus semua edge masuk dan keluar dari node tersebut. Jika yang dihapus hanya relasinya saja tanpa menghapus mata kuliahnya, perlu ditambahkan fitur delete edge secara terpisah.
 
-Topological Sort dengan Kahn's Algorithm menangani ini secara alami. Semua node dengan indegree 0 dimasukkan ke queue di awal, dan diproses secara berurutan. Tidak ada perubahan yang diperlukan pada algoritma; hanya urutan output yang mungkin berbeda tergantung urutan data di queue.
+Dampak penghapusan edge:
+- Mata kuliah yang sebelumnya punya prasyarat bisa jadi tidak punya prasyarat lagi (indegree menjadi 0).
+- Hasil topological sort berubah karena urutan ketergantungan berubah.
+- Cycle yang sebelumnya ada bisa hilang jika edge yang dihapus adalah bagian dari siklus tersebut.
 
-### What-If 5: Bagaimana jika pengguna melakukan search dengan prefix yang sangat panjang dan tidak ada hasilnya?
+---
 
-Trie menangani ini dengan traversal per karakter. Jika pada titik tertentu tidak ditemukan karakter yang sesuai di node Trie, pencarian langsung berhenti dan mengembalikan list kosong. Tidak ada iterasi yang sia-sia ke seluruh dataset
+### 3. Apa yang terjadi jika bobot edge berubah?
+
+Saat ini program menggunakan **unweighted directed graph**, artinya semua relasi prasyarat dianggap setara tanpa bobot. Jika bobot edge ditambahkan (misalnya tingkat kesulitan transisi antar mata kuliah), maka:
+
+- Struktur `adjacencyList` perlu diubah dari `Map<String, List<String>>` menjadi `Map<String, List<Edge>>` di mana `Edge` menyimpan node tujuan dan bobotnya.
+- Algoritma Topological Sort tidak terpengaruh karena tidak bergantung pada bobot.
+- Jika bobot digunakan untuk mencari jalur terpendek/termurah, perlu ditambahkan algoritma seperti Dijkstra atau Bellman-Ford.
+
+---
+
+### 4. Apa yang terjadi jika input user tidak ditemukan?
+
+Program sudah menangani kasus ini. Jika kode mata kuliah yang diinput tidak ada di `courses` Map:
+- Menu prasyarat langsung: menampilkan pesan "Mata kuliah tidak ditemukan"
+- Menu semua prasyarat: menampilkan pesan "Mata kuliah tidak ditemukan"
+- Search prefix Trie: menampilkan pesan "Tidak ada mata kuliah dengan prefix tersebut"
+- Menu update/delete: menampilkan pesan "Mata kuliah tidak ditemukan"
+
+Program tidak crash dan kembali ke menu utama setelah menampilkan pesan error.
+
+---
+
+### 5. Apa yang terjadi jika ada data duplikat?
+
+Program sudah menangani data duplikat saat load CSV maupun saat input runtime:
+
+| Jenis Duplikat | Penanganan |
+|----------------|-----------|
+| Kode mata kuliah duplikat di `courses.csv` | Baris kedua diabaikan, data pertama dipakai |
+| Relasi prasyarat duplikat di `prerequisites.csv` | Relasi kedua diabaikan |
+| Insert mata kuliah dengan kode yang sudah ada | Ditolak, pesan error ditampilkan |
+| Insert relasi yang sudah ada | Ditolak, relasi tidak ditambahkan dua kali |
+
+Penanganan ini menjaga konsistensi graph agar tidak ada node atau edge ganda yang bisa merusak hasil algoritma.
+
+---
+
+### 6. Apa yang terjadi jika graph tidak terhubung?
+
+Graph tidak terhubung (disconnected graph) berarti ada mata kuliah yang tidak memiliki relasi prasyarat sama sekali dengan mata kuliah lainnya — membentuk komponen-komponen terpisah.
+
+Program tetap berjalan normal karena:
+- DFS prasyarat hanya menelusuri komponen yang terhubung dengan node yang dicari, node di komponen lain tidak terpengaruh.
+- Cycle Detection mengiterasi **semua node** dengan status WHITE, sehingga setiap komponen tetap dicek meskipun terpisah.
+- Topological Sort dengan Kahn's Algorithm juga memproses semua node terlepas dari apakah graph terhubung atau tidak, karena dimulai dari semua node dengan indegree 0.
+
+Mata kuliah tanpa prasyarat (indegree 0) akan muncul di awal hasil topological sort, yang memang benar secara logika — bisa diambil kapan saja.
 
 
 ## Kesimpulan
