@@ -259,4 +259,76 @@ Jika graph memiliki cycle, program tidak menjalankan topological sort karena uru
 
 ## Tracing manual
 
+Penelusuran manual (*tracing*) dilakukan pada algoritma utama **Kahn's Algorithm (Topological Sort)** untuk membuktikan kevalidan logika pengurutan rekomendasi mata kuliah bebas benturan prasyarat. Untuk keperluan demonstrasi, diambil sampel sub-graf berisi 5 mata kuliah yang saling terhubung dari kurikulum siber kelompok kami:
+
+1. **ET234103** (Algoritma & Teknik Pemrograman)
+2. **ET234203** (Struktur Data & PBO)
+3. **ET234301** (Ethical Hacking & Uji Keamanan Siber)
+4. **ET234304** (Pemrograman Sistem dan Jaringan)
+5. **ET234401** (Manajemen Insiden Keamanan Siber)
+
+**Hubungan Relasi Berarah (Edge Prerequisites):**
+* ET234103 → ET234203
+* ET234203 → ET234301
+* ET234203 → ET234304
+* ET234301 → ET234401
+
+### Langkah-Langkah Eksekusi Algoritma (Simulasi Antrean):
+
+a) **Inisialisasi Derajat Masuk (In-Degree)**
+   Sistem menghitung jumlah panah masuk (prasyarat) untuk setiap node:
+   * In-Degree[ET234103] = 0 (Tidak memiliki mata kuliah prasyarat)
+   * In-Degree[ET234203] = 1 (Membutuhkan ET234103)
+   * In-Degree[ET234301] = 1 (Membutuhkan ET234203)
+   * In-Degree[ET234304] = 1 (Membutuhkan ET234203)
+   * In-Degree[ET234401] = 1 (Membutuhkan ET234301)
+   
+   *Kondisi Awal Antrean:* Masukkan semua node dengan nilai In-Degree = 0 ke dalam Queue.
+   * `Queue` = `[ET234103]`
+   * `Hasil Urutan (Order)` = `[]`
+
+b) **Iterasi Pertama**
+   * **Aksi:** Dequeue (keluarkan elemen terdepan antrean) → **ET234103**.
+   * **Proses:** Masukkan ET234103 ke dalam list *Hasil Urutan*. Kurangi nilai In-Degree dari semua tetangga keluar yang bergantung pada ET234103 (yaitu ET234203).
+     * In-Degree[ET234203] berkurang dari 1 menjadi 0.
+   * **Evaluasi:** Karena In-Degree[ET234203] sudah bernilai 0, node ini dimasukkan ke dalam Queue.
+   * *Status Akhir:*
+     * `Queue` = `[ET234203]`
+     * `Hasil Urutan` = `[ET234103]`
+
+c) **Iterasi Kedua**
+   * **Aksi:** Dequeue → **ET234203**.
+   * **Proses:** Masukkan ET234203 ke dalam list *Hasil Urutan*. Kurangi nilai In-Degree dari semua tetangga keluar yang bergantung padanya (ET234301 dan ET234304).
+     * In-Degree[ET234301] berkurang dari 1 menjadi 0.
+     * In-Degree[ET234304] berkurang dari 1 menjadi 0.
+   * **Evaluasi:** Masukkan kedua node tersebut ke dalam Queue karena derajat masuknya telah habis (0).
+   * *Status Akhir:*
+     * `Queue` = `[ET234301, ET234304]`
+     * `Hasil Urutan` = `[ET234103, ET234203]`
+
+d) **Iterasi Ketiga**
+   * **Aksi:** Dequeue → **ET234301**.
+   * **Proses:** Masukkan ET234301 ke dalam list *Hasil Urutan*. Kurangi nilai In-Degree dari tetangga keluar yang bergantung padanya (ET234401).
+     * In-Degree[ET234401] berkurang dari 1 menjadi 0.
+   * **Evaluasi:** Masukkan ET234401 ke dalam Queue.
+   * *Status Akhir:*
+     * `Queue` = `[ET234304, ET234401]`
+     * `Hasil Urutan` = `[ET234103, ET234203, ET234301]`
+
+e) **Iterasi Keempat**
+   * **Aksi:** Dequeue → **ET234304**.
+   * **Proses:** Masukkan ET234304 ke dalam list *Hasil Urutan*. Node ini tidak memiliki tetangga keluar lagi pada sub-graf sampel.
+   * *Status Akhir:*
+     * `Queue` = `[ET234401]`
+     * `Hasil Urutan` = `[ET234103, ET234203, ET234301, ET234304]`
+
+f) **Iterasi Kelima**
+   * **Aksi:** Dequeue → **ET234401**.
+   * **Proses:** Masukkan ET234401 ke dalam list *Hasil Urutan*.
+   * *Status Akhir:*
+     * `Queue` = `[]` *(Antrean kosong, algoritma berhenti)*
+     * `Hasil Urutan Akhir` = `[ET234103, ET234203, ET234301, ET234304, ET234401]`
+
+### Kesimpulan Tracing:
+Hasil pelacakan antrean secara manual membuktikan bahwa urutan mata kuliah yang direkomendasikan oleh Kahn's Algorithm berjalan 100% valid secara akademik kurikulum. Seorang mahasiswa secara logis dipandu untuk menyelesaikan fondasi pemrograman (`ET234103` & `ET234203`) terlebih dahulu sebelum diperkenankan mengambil mata kuliah lanjut keamanan tingkat tinggi seperti Manajemen Insiden (`ET234401`).
 
