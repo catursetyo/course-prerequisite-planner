@@ -56,7 +56,7 @@ java -cp out Main data/courses.csv data/prerequisites.csv
 1. Catur Setyo Ragil - 502725066
 2. Aura Syahzanani A - 5027251123
 3. Donnavie Aulia - 5027251093
-4. ....
+4. Nur Rizki Syahbana - 5027251095
 5. .....
 
 ## Deskripsi Masalah
