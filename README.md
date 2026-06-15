@@ -269,7 +269,7 @@ Jika graph memiliki cycle, program tidak menjalankan topological sort karena uru
 ![Prasyarat Langsung](assets/screenshot-3-semua-prasyarat.png)
 
 ### 4. Semua Prasyarat DFS (Menu 5)
-![Semua Prasyarat DFS](assets/screenshot-4-topological-sort.png)
+![Semua Prasyarat DFS](assets/screenshot-4-semua-prasyarat-dfs.png)
 
 ### 5. Topological Sort (Menu 6)
 ![Topological Sort](assets/screenshot-5-topological-sort.png)
