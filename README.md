@@ -263,16 +263,18 @@ Jika graph memiliki cycle, program tidak menjalankan topological sort karena uru
 ![Menu Utama](assets/screenshot-1-menu-utama.png)
 
 ### 2. Search Prefix (Menu 2)
-![Search Prefix](assets/screenshot-2-search-prefix.png)
+![Search Prefix](assets/screenshot-2-search.png)
 
 ### 3. Prasyarat Langsung (Menu 4)
-![Prasyarat Langsung](assets/screenshot-3-prasyarat-langsung.png)
+![Prasyarat Langsung](assets/screenshot-3-semua-prasyarat.png)
 
 ### 4. Semua Prasyarat DFS (Menu 5)
-![Semua Prasyarat DFS](assets/screenshot-4-semua-prasyarat-dfs.png)
+![Semua Prasyarat DFS](assets/screenshot-4-topological-sort.png)
 
 ### 5. Topological Sort (Menu 6)
 ![Topological Sort](assets/screenshot-5-topological-sort.png)
+![Topological Sort](assets/screenshot-5-topological-sort2.png)
+![Topological Sort](assets/screenshot-5-topological-sort3.png)
 
 ### 6. Cycle Detection (Menu 7)
 ![Cycle Detection](assets/screenshot-6-cycle-detection.png)
