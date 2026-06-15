@@ -257,6 +257,29 @@ Jika graph memiliki cycle, program tidak menjalankan topological sort karena uru
 | Data disimpan dalam CSV             | Data mudah diubah tanpa perlu mengubah source code Java.                                             |
 | Add/update/delete hanya di memori   | Sesuai kebutuhan simulasi penambahan mata kuliah baru; perubahan belum disimpan permanen ke CSV.     |
 
+## Screenshot Hasil Program
+
+### 1. Menu Utama
+![Menu Utama](assets/screenshot-1-menu-utama.png)
+
+### 2. Search Prefix (Menu 2)
+![Search Prefix](assets/screenshot-2-search-prefix.png)
+
+### 3. Prasyarat Langsung (Menu 4)
+![Prasyarat Langsung](assets/screenshot-3-prasyarat-langsung.png)
+
+### 4. Semua Prasyarat DFS (Menu 5)
+![Semua Prasyarat DFS](assets/screenshot-4-semua-prasyarat-dfs.png)
+
+### 5. Topological Sort (Menu 6)
+![Topological Sort](assets/screenshot-5-topological-sort.png)
+
+### 6. Cycle Detection (Menu 7)
+![Cycle Detection](assets/screenshot-6-cycle-detection.png)
+
+### 7. Relasi Ditolak karena Cycle (Menu 9)
+![Cycle Ditolak](assets/screenshot-7-cycle-ditolak.png)
+
 ## Tracing manual
 
 Penelusuran manual (*tracing*) dilakukan pada algoritma utama **Kahn's Algorithm (Topological Sort)** untuk membuktikan kevalidan logika pengurutan rekomendasi mata kuliah bebas benturan prasyarat. Untuk keperluan demonstrasi, diambil sampel sub-graf berisi 5 mata kuliah yang saling terhubung dari kurikulum siber kelompok kami:
