@@ -163,6 +163,8 @@ Fungsi Trie:
 ```text
 Search mata kuliah berdasarkan prefix kode
 Search mata kuliah berdasarkan prefix nama
+Hitung jumlah hasil prefix
+Delete indeks course saat update/delete data
 ```
 
 Saat ini Trie menyimpan mapping:
@@ -171,7 +173,7 @@ Saat ini Trie menyimpan mapping:
 prefix -> daftar kode mata kuliah
 ```
 
-Setelah add/update/delete mata kuliah, Trie dibangun ulang dari seluruh data course agar hasil search tetap sinkron.
+Setelah add/update/delete mata kuliah, indeks Trie diperbarui langsung menggunakan `insert` dan `delete` agar hasil search tetap sinkron tanpa rebuild penuh.
 
 ### `src/Main.java`
 
@@ -608,6 +610,8 @@ Saat ini Trie memakai:
 ```java
 insert(String key, String courseCode)
 searchByPrefix(String prefix)
+countMatches(String prefix)
+delete(String key, String courseCode)
 ```
 
 Jika ingin mengikuti method yang disarankan di AGENTS.md secara eksplisit, bisa ditambahkan wrapper:
@@ -643,11 +647,12 @@ Add edge tanpa cycle check: O(k), k = jumlah neighbor dari prerequisite
 Add edge dengan cycle check: O(V + E)
 DFS prasyarat: O(V + E)
 Cycle Detection: O(V + E)
-Topological Sort: O(V + E)
+Topological Sort: O((V + E) log V) karena memakai PriorityQueue berdasarkan semester dan kode
 Insert ke Trie: O(L)
 Search prefix Trie: O(L + R)
-Update course: O(1), lalu rebuild Trie O(V * L)
-Delete course: O(V + E), lalu rebuild Trie O(V * L)
+Delete dari Trie: O(L)
+Update course: O(1) untuk Map dan O(L) untuk pembaruan indeks Trie
+Delete course: O(V + E) untuk Graph dan O(L) untuk pembaruan indeks Trie
 ```
 
 Catatan:

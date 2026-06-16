@@ -10,13 +10,19 @@ public class Course {
     private final String difficulty;
 
     public Course(String code, String name, int semester, int credits, String category, String track, String difficulty) {
-        this.code = code;
-        this.name = name;
+        this.code = requireText(code, "Kode mata kuliah").toUpperCase();
+        this.name = requireText(name, "Nama mata kuliah");
+        if (semester <= 0) {
+            throw new IllegalArgumentException("Semester harus lebih dari 0.");
+        }
+        if (credits <= 0) {
+            throw new IllegalArgumentException("SKS harus lebih dari 0.");
+        }
         this.semester = semester;
         this.credits = credits;
-        this.category = category;
-        this.track = track;
-        this.difficulty = difficulty;
+        this.category = requireText(category, "Kategori");
+        this.track = requireText(track, "Track");
+        this.difficulty = requireText(difficulty, "Difficulty");
     }
 
     public String getCode() {
@@ -49,6 +55,13 @@ public class Course {
 
     @Override
     public String toString() {
-        return code + " - " + name + " | Sem " + semester + " | " + credits + " SKS | " + category + " | " + difficulty;
+        return code + " - " + name + " | Sem " + semester + " | " + credits + " SKS | " + category + " | " + track + " | " + difficulty;
+    }
+
+    private static String requireText(String value, String fieldName) {
+        if (value == null || value.trim().isEmpty()) {
+            throw new IllegalArgumentException(fieldName + " tidak boleh kosong.");
+        }
+        return value.trim();
     }
 }

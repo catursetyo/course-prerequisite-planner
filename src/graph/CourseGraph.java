@@ -7,18 +7,25 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.Collection;
 import java.util.Set;
 
 public class CourseGraph {
+    private static final int TABLE_WIDTH = 119;
+    private static final int NAME_WIDTH = 47;
+    private static final int CATEGORY_WIDTH = 20;
+    private static final int TRACK_WIDTH = 11;
+    private static final int DIFFICULTY_WIDTH = 10;
+
     private final Map<String, Course> courses = new LinkedHashMap<>();
     private final Map<String, List<String>> adjacencyList = new LinkedHashMap<>();
     private final Map<String, List<String>> reverseAdjacencyList = new LinkedHashMap<>();
@@ -49,8 +56,8 @@ public class CourseGraph {
                 List<String> values = parseCsvLine(line);
                 String code = getRequiredValue(values, header, "course_code", row);
                 String name = getRequiredValue(values, header, "course_name", row);
-                int semester = parseInt(getRequiredValue(values, header, "semester", row), "semester", row);
-                int credits = parseInt(getRequiredValue(values, header, "sks", row), "sks", row);
+                int semester = parsePositiveInt(getRequiredValue(values, header, "semester", row), "semester", row);
+                int credits = parsePositiveInt(getRequiredValue(values, header, "sks", row), "sks", row);
                 String category = getRequiredValue(values, header, "category", row);
                 String track = header.containsKey("track") ? getRequiredValue(values, header, "track", row) : "-";
                 String difficulty = getRequiredValue(values, header, "difficulty", row);
@@ -100,68 +107,70 @@ public class CourseGraph {
     }
 
     public boolean addEdge(String prerequisiteCode, String courseCode) {
-        validateCourseExists(prerequisiteCode);
-        validateCourseExists(courseCode);
+        String normalizedPrerequisiteCode = validateCourseExists(prerequisiteCode);
+        String normalizedCourseCode = validateCourseExists(courseCode);
 
-        if (prerequisiteCode.equals(courseCode)) {
-            throw new IllegalArgumentException("Mata kuliah tidak boleh menjadi prasyarat dirinya sendiri: " + courseCode);
+        if (normalizedPrerequisiteCode.equals(normalizedCourseCode)) {
+            throw new IllegalArgumentException("Mata kuliah tidak boleh menjadi prasyarat dirinya sendiri: " + normalizedCourseCode);
         }
 
-        List<String> nextCourses = adjacencyList.get(prerequisiteCode);
-        if (nextCourses.contains(courseCode)) {
+        List<String> nextCourses = adjacencyList.get(normalizedPrerequisiteCode);
+        if (nextCourses.contains(normalizedCourseCode)) {
             return false;
         }
 
-        nextCourses.add(courseCode);
-        reverseAdjacencyList.get(courseCode).add(prerequisiteCode);
+        nextCourses.add(normalizedCourseCode);
+        reverseAdjacencyList.get(normalizedCourseCode).add(normalizedPrerequisiteCode);
 
         if (hasCycle()) {
-            nextCourses.remove(courseCode);
-            reverseAdjacencyList.get(courseCode).remove(prerequisiteCode);
-            throw new IllegalArgumentException("Relasi menyebabkan cycle dan dibatalkan: " + prerequisiteCode + " -> " + courseCode);
+            nextCourses.remove(normalizedCourseCode);
+            reverseAdjacencyList.get(normalizedCourseCode).remove(normalizedPrerequisiteCode);
+            throw new IllegalArgumentException("Relasi menyebabkan cycle dan dibatalkan: " + normalizedPrerequisiteCode + " -> " + normalizedCourseCode);
         }
 
         return true;
     }
 
     public boolean updateCourse(String code, Course updatedCourse) {
-        validateCourseExists(code);
+        String normalizedCode = validateCourseExists(code);
         if (updatedCourse == null) {
             throw new IllegalArgumentException("Data mata kuliah baru tidak boleh kosong.");
         }
-        if (!code.equals(updatedCourse.getCode())) {
+        if (!normalizedCode.equals(updatedCourse.getCode())) {
             throw new IllegalArgumentException("Kode mata kuliah tidak boleh diubah.");
         }
 
-        courses.put(code, updatedCourse);
+        courses.put(normalizedCode, updatedCourse);
         return true;
     }
 
     public boolean deleteCourse(String code) {
-        validateCourseExists(code);
+        String normalizedCode = validateCourseExists(code);
 
-        courses.remove(code);
-        adjacencyList.remove(code);
-        reverseAdjacencyList.remove(code);
+        courses.remove(normalizedCode);
+        adjacencyList.remove(normalizedCode);
+        reverseAdjacencyList.remove(normalizedCode);
 
         for (List<String> neighbors : adjacencyList.values()) {
-            neighbors.remove(code);
+            neighbors.remove(normalizedCode);
         }
         for (List<String> prerequisites : reverseAdjacencyList.values()) {
-            prerequisites.remove(code);
+            prerequisites.remove(normalizedCode);
         }
 
         return true;
     }
 
-    private void validateCourseExists(String code) {
-        if (!courses.containsKey(code)) {
-            throw new IllegalArgumentException("Kode mata kuliah tidak ditemukan di courses.csv: " + code);
+    private String validateCourseExists(String code) {
+        String normalizedCode = normalizeCode(code);
+        if (!courses.containsKey(normalizedCode)) {
+            throw new IllegalArgumentException("Kode mata kuliah tidak ditemukan di courses.csv: " + normalizedCode);
         }
+        return normalizedCode;
     }
 
     public Course getCourse(String code) {
-        return courses.get(code);
+        return courses.get(normalizeCode(code));
     }
 
     public Map<String, Course> getCourses() {
@@ -181,8 +190,8 @@ public class CourseGraph {
     }
 
     public List<String> getDirectPrerequisites(String courseCode) {
-        validateCourseExists(courseCode);
-        return new ArrayList<>(reverseAdjacencyList.get(courseCode));
+        String normalizedCode = validateCourseExists(courseCode);
+        return new ArrayList<>(reverseAdjacencyList.get(normalizedCode));
     }
 
     public int getTotalCourses() {
@@ -198,35 +207,53 @@ public class CourseGraph {
     }
 
     public void printAllCourses() {
-        for (Course course : courses.values()) {
-            System.out.println(course);
+        printCourseTable(courses.values());
+    }
+
+    public void printCourseTable(Collection<Course> courseList) {
+        printDivider();
+        System.out.printf("%-9s | %-47s | %3s | %3s | %-20s | %-11s | %-10s%n",
+                "Kode", "Nama Mata Kuliah", "Sem", "SKS", "Kategori", "Track", "Difficulty");
+        printDivider();
+        for (Course course : courseList) {
+            System.out.printf("%-9s | %-47s | %3d | %3d | %-20s | %-11s | %-10s%n",
+                    course.getCode(),
+                    truncate(course.getName(), NAME_WIDTH),
+                    course.getSemester(),
+                    course.getCredits(),
+                    truncate(course.getCategory(), CATEGORY_WIDTH),
+                    truncate(course.getTrack(), TRACK_WIDTH),
+                    truncate(course.getDifficulty(), DIFFICULTY_WIDTH));
         }
+        printDivider();
     }
 
     public void printAdjacencyList() {
+        printDivider();
+        System.out.println("Adjacency List: prerequisite_code -> course_code");
+        printDivider();
         for (Map.Entry<String, List<String>> entry : adjacencyList.entrySet()) {
             Course fromCourse = courses.get(entry.getKey());
-            System.out.print(entry.getKey() + " (" + fromCourse.getName() + ") -> ");
+            System.out.println(entry.getKey() + " - " + fromCourse.getName());
 
             if (entry.getValue().isEmpty()) {
-                System.out.println("[]");
+                System.out.println("  -> Tidak ada mata kuliah lanjutan langsung.");
                 continue;
             }
 
-            List<String> formattedNeighbors = new ArrayList<>();
             for (String neighborCode : entry.getValue()) {
                 Course neighborCourse = courses.get(neighborCode);
-                formattedNeighbors.add(neighborCode + " (" + neighborCourse.getName() + ")");
+                System.out.println("  -> " + neighborCode + " - " + neighborCourse.getName());
             }
-            System.out.println(formattedNeighbors);
         }
+        printDivider();
     }
 
     public void printDirectPrerequisites(String courseCode) {
-        validateCourseExists(courseCode);
-        List<String> prerequisites = reverseAdjacencyList.get(courseCode);
+        String normalizedCode = validateCourseExists(courseCode);
+        List<String> prerequisites = reverseAdjacencyList.get(normalizedCode);
 
-        System.out.println("Prasyarat langsung untuk " + courses.get(courseCode));
+        System.out.println("Prasyarat langsung untuk " + courses.get(normalizedCode));
         if (prerequisites.isEmpty()) {
             System.out.println("- Tidak ada prasyarat langsung.");
             return;
@@ -238,9 +265,9 @@ public class CourseGraph {
     }
 
     public Set<String> getAllPrerequisites(String courseCode) {
-        validateCourseExists(courseCode);
+        String normalizedCode = validateCourseExists(courseCode);
         Set<String> result = new LinkedHashSet<>();
-        dfsPrerequisites(courseCode, result);
+        dfsPrerequisites(normalizedCode, result);
         return result;
     }
 
@@ -298,7 +325,7 @@ public class CourseGraph {
             }
         }
 
-        Queue<String> queue = new ArrayDeque<>();
+        Queue<String> queue = new PriorityQueue<>(courseOrderComparator());
         for (Map.Entry<String, Integer> entry : indegree.entrySet()) {
             if (entry.getValue() == 0) {
                 queue.add(entry.getKey());
@@ -321,11 +348,23 @@ public class CourseGraph {
         return order;
     }
 
+    private Comparator<String> courseOrderComparator() {
+        return (firstCode, secondCode) -> {
+            Course firstCourse = courses.get(firstCode);
+            Course secondCourse = courses.get(secondCode);
+            int semesterComparison = Integer.compare(firstCourse.getSemester(), secondCourse.getSemester());
+            if (semesterComparison != 0) {
+                return semesterComparison;
+            }
+            return firstCode.compareTo(secondCode);
+        };
+    }
+
     private Map<String, Integer> getHeaderIndex(String headerLine) {
         List<String> headers = parseCsvLine(headerLine);
         Map<String, Integer> headerIndex = new LinkedHashMap<>();
         for (int i = 0; i < headers.size(); i++) {
-            headerIndex.put(headers.get(i).trim(), i);
+            headerIndex.put(headers.get(i).trim().toLowerCase(Locale.ROOT), i);
         }
         return headerIndex;
     }
@@ -351,12 +390,37 @@ public class CourseGraph {
         return value;
     }
 
-    private int parseInt(String value, String column, int row) {
+    private int parsePositiveInt(String value, String column, int row) {
         try {
-            return Integer.parseInt(value);
+            int number = Integer.parseInt(value);
+            if (number <= 0) {
+                throw new IllegalArgumentException("Baris " + row + " kolom " + column + " harus lebih dari 0: " + value);
+            }
+            return number;
         } catch (NumberFormatException error) {
             throw new IllegalArgumentException("Baris " + row + " kolom " + column + " harus berupa angka: " + value);
         }
+    }
+
+    private String normalizeCode(String code) {
+        return code == null ? "" : code.trim().toUpperCase(Locale.ROOT);
+    }
+
+    private void printDivider() {
+        for (int i = 0; i < TABLE_WIDTH; i++) {
+            System.out.print("-");
+        }
+        System.out.println();
+    }
+
+    private String truncate(String text, int maxLength) {
+        if (text.length() <= maxLength) {
+            return text;
+        }
+        if (maxLength <= 3) {
+            return text.substring(0, maxLength);
+        }
+        return text.substring(0, maxLength - 3) + "...";
     }
 
     private List<String> parseCsvLine(String line) {

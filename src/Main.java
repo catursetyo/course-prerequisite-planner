@@ -3,6 +3,7 @@ import model.Course;
 import tree.Trie;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
@@ -10,6 +11,7 @@ import java.util.Set;
 public class Main {
     private static final String DEFAULT_COURSES_FILE = "data/courses.csv";
     private static final String DEFAULT_PREREQUISITES_FILE = "data/prerequisites.csv";
+    private static final int MENU_WIDTH = 96;
 
     public static void main(String[] args) {
         String coursesFile = args.length >= 1 ? args[0] : DEFAULT_COURSES_FILE;
@@ -18,21 +20,31 @@ public class Main {
         try {
             CourseGraph graph = new CourseGraph(coursesFile, prerequisitesFile);
             Trie trie = buildTrie(graph);
+            printStartupSummary(graph, coursesFile, prerequisitesFile);
             runMenu(graph, trie);
         } catch (IOException error) {
-            System.out.println("Gagal membaca file CSV: " + error.getMessage());
+            printError("Gagal membaca file CSV: " + error.getMessage());
         } catch (IllegalArgumentException error) {
-            System.out.println("Data CSV tidak valid: " + error.getMessage());
+            printError("Data CSV tidak valid: " + error.getMessage());
         }
     }
 
     private static Trie buildTrie(CourseGraph graph) {
         Trie trie = new Trie();
         for (Course course : graph.getAllCourses()) {
-            trie.insert(course.getCode(), course.getCode());
-            trie.insert(course.getName(), course.getCode());
+            indexCourseInTrie(trie, course);
         }
         return trie;
+    }
+
+    private static void indexCourseInTrie(Trie trie, Course course) {
+        trie.insert(course.getCode(), course.getCode());
+        trie.insert(course.getName(), course.getCode());
+    }
+
+    private static void removeCourseFromTrie(Trie trie, Course course) {
+        trie.delete(course.getCode(), course.getCode());
+        trie.delete(course.getName(), course.getCode());
     }
 
     private static void runMenu(CourseGraph graph, Trie trie) {
@@ -45,12 +57,14 @@ public class Main {
 
             switch (choice) {
                 case "1":
+                    printSection("Daftar Mata Kuliah");
                     graph.printAllCourses();
                     break;
                 case "2":
                     searchCourse(scanner, graph, trie);
                     break;
                 case "3":
+                    printSection("Struktur Graph");
                     graph.printAdjacencyList();
                     break;
                 case "4":
@@ -63,76 +77,101 @@ public class Main {
                     showTopologicalSort(graph);
                     break;
                 case "7":
-                    System.out.println(graph.hasCycle() ? "Graph memiliki cycle." : "Graph tidak memiliki cycle.");
+                    showCycleStatus(graph);
                     break;
                 case "8":
-                    if (addCourse(scanner, graph)) {
-                        trie = buildTrie(graph);
-                    }
+                    addCourse(scanner, graph, trie);
                     break;
                 case "9":
                     addPrerequisiteRelation(scanner, graph);
                     break;
                 case "10":
-                    if (updateCourse(scanner, graph)) {
-                        trie = buildTrie(graph);
-                    }
+                    updateCourse(scanner, graph, trie);
                     break;
                 case "11":
-                    if (deleteCourse(scanner, graph)) {
-                        trie = buildTrie(graph);
-                    }
+                    deleteCourse(scanner, graph, trie);
                     break;
                 case "0":
-                    System.out.println("Program selesai.");
+                    printSuccess("Program selesai.");
                     return;
                 default:
-                    System.out.println("Menu tidak valid.");
+                    printWarning("Menu tidak valid. Pilih angka 0 sampai 11.");
             }
 
             System.out.println();
         }
     }
 
+    private static void printStartupSummary(CourseGraph graph, String coursesFile, String prerequisitesFile) {
+        printLine('=');
+        System.out.println(centerText("COURSE PREREQUISITE PLANNER", MENU_WIDTH));
+        System.out.println(centerText("Topik 9 - Struktur Data dan OOP", MENU_WIDTH));
+        printLine('=');
+        System.out.println("Dataset mata kuliah : " + coursesFile);
+        System.out.println("Dataset prasyarat   : " + prerequisitesFile);
+        System.out.println("Jumlah mata kuliah  : " + graph.getTotalCourses());
+        System.out.println("Jumlah relasi       : " + graph.getTotalEdges());
+        System.out.println("Status graph        : " + (graph.hasCycle() ? "Memiliki siklus" : "Tidak ada siklus"));
+        printLine('=');
+    }
+
     private static void printMenu(CourseGraph graph) {
-        System.out.println("=== Course Prerequisite Planner ===");
-        System.out.println("Jumlah mata kuliah: " + graph.getTotalCourses());
-        System.out.println("Jumlah relasi prasyarat: " + graph.getTotalEdges());
-        System.out.println("1. Tampilkan semua mata kuliah");
-        System.out.println("2. Cari mata kuliah berdasarkan prefix/kode/nama");
-        System.out.println("3. Tampilkan adjacency list");
-        System.out.println("4. Tampilkan prasyarat langsung");
-        System.out.println("5. Tampilkan semua prasyarat tidak langsung");
-        System.out.println("6. Rekomendasi urutan pengambilan mata kuliah");
-        System.out.println("7. Deteksi cycle");
-        System.out.println("8. Tambah mata kuliah");
-        System.out.println("9. Tambah relasi prasyarat");
-        System.out.println("10. Update mata kuliah");
-        System.out.println("11. Delete mata kuliah");
-        System.out.println("0. Keluar");
+        System.out.println();
+        printLine('=');
+        System.out.println(centerText("MENU UTAMA", MENU_WIDTH));
+        printLine('=');
+        System.out.printf("Mata kuliah: %-3d | Relasi prasyarat: %-3d | Cycle: %s%n",
+                graph.getTotalCourses(),
+                graph.getTotalEdges(),
+                graph.hasCycle() ? "YA" : "TIDAK");
+        printLine('-');
+        System.out.println(" 1. Tampilkan semua mata kuliah          7. Deteksi siklus prasyarat");
+        System.out.println(" 2. Search prefix kode/nama              8. Tambah mata kuliah");
+        System.out.println(" 3. Tampilkan adjacency list graph       9. Tambah relasi prasyarat");
+        System.out.println(" 4. Tampilkan prasyarat langsung        10. Update mata kuliah");
+        System.out.println(" 5. Tampilkan semua prasyarat DFS       11. Delete mata kuliah");
+        System.out.println(" 6. Rekomendasi topological sort         0. Keluar");
+        printLine('-');
     }
 
     private static void searchCourse(Scanner scanner, CourseGraph graph, Trie trie) {
-        System.out.print("Masukkan prefix kode/nama: ");
-        String prefix = scanner.nextLine();
+        printSection("Search Prefix dengan Trie");
+        String prefix = readRequiredText(scanner, "Masukkan prefix kode/nama: ");
         Set<String> results = trie.searchByPrefix(prefix);
 
         if (results.isEmpty()) {
-            System.out.println("Tidak ada mata kuliah yang cocok.");
+            printWarning("Tidak ada mata kuliah yang cocok untuk prefix: " + prefix.trim());
             return;
         }
 
+        System.out.println("Prefix       : " + prefix.trim());
+        System.out.println("Jumlah hasil : " + trie.countMatches(prefix));
+        System.out.println("Sumber data  : Trie untuk pencarian, Graph untuk detail dan relasi");
+
+        List<Course> matchedCourses = new ArrayList<>();
         for (String code : results) {
-            System.out.println("- " + graph.getCourse(code));
+            Course course = graph.getCourse(code);
+            if (course != null) {
+                matchedCourses.add(course);
+            }
+        }
+        graph.printCourseTable(matchedCourses);
+
+        System.out.println("Ringkasan relasi hasil search:");
+        for (Course course : matchedCourses) {
+            int directPrerequisites = graph.getDirectPrerequisites(course.getCode()).size();
+            int dependentCourses = graph.getAdjacencyList().get(course.getCode()).size();
+            System.out.printf("- %-9s | prasyarat langsung: %d | mata kuliah lanjutan: %d%n",
+                    course.getCode(), directPrerequisites, dependentCourses);
         }
     }
 
     private static void showDirectPrerequisites(Scanner scanner, CourseGraph graph) {
-        System.out.print("Masukkan kode mata kuliah: ");
-        String courseCode = scanner.nextLine().trim().toUpperCase();
+        printSection("Prasyarat Langsung");
+        String courseCode = readRequiredText(scanner, "Masukkan kode mata kuliah: ");
         Course target = graph.getCourse(courseCode);
         if (target == null) {
-            System.out.println("Kode mata kuliah tidak ditemukan: " + courseCode);
+            printWarning("Kode mata kuliah tidak ditemukan: " + courseCode.trim().toUpperCase());
             return;
         }
 
@@ -140,47 +179,66 @@ public class Main {
     }
 
     private static void showAllPrerequisites(Scanner scanner, CourseGraph graph) {
-        System.out.print("Masukkan kode mata kuliah: ");
-        String courseCode = scanner.nextLine().trim().toUpperCase();
+        printSection("Semua Prasyarat dengan DFS");
+        String courseCode = readRequiredText(scanner, "Masukkan kode mata kuliah: ");
         Course target = graph.getCourse(courseCode);
         if (target == null) {
-            System.out.println("Kode mata kuliah tidak ditemukan: " + courseCode);
+            printWarning("Kode mata kuliah tidak ditemukan: " + courseCode.trim().toUpperCase());
             return;
         }
 
         Set<String> prerequisites = graph.getAllPrerequisites(courseCode);
-        System.out.println("Semua prasyarat untuk " + target);
+        System.out.println("Target: " + target);
         if (prerequisites.isEmpty()) {
-            System.out.println("- Tidak ada prasyarat.");
+            printInfo("Mata kuliah ini tidak memiliki prasyarat.");
             return;
         }
 
+        List<Course> prerequisiteCourses = new ArrayList<>();
         for (String prerequisiteCode : prerequisites) {
-            System.out.println("- " + graph.getCourse(prerequisiteCode));
+            prerequisiteCourses.add(graph.getCourse(prerequisiteCode));
         }
+        graph.printCourseTable(prerequisiteCourses);
     }
 
     private static void showTopologicalSort(CourseGraph graph) {
+        printSection("Rekomendasi Urutan Pengambilan Mata Kuliah");
         List<String> order;
         try {
             order = graph.topologicalSort();
         } catch (IllegalStateException error) {
-            System.out.println("Tidak bisa membuat rekomendasi karena terdapat siklus prasyarat.");
+            printError("Tidak bisa membuat rekomendasi karena terdapat siklus prasyarat.");
             return;
         }
 
-        System.out.println("Rekomendasi urutan pengambilan mata kuliah:");
+        System.out.printf("%-4s | %-9s | %-47s | %3s | %3s%n", "No", "Kode", "Nama Mata Kuliah", "Sem", "SKS");
+        printLine('-');
         for (int i = 0; i < order.size(); i++) {
-            System.out.printf("%02d. %s%n", i + 1, graph.getCourse(order.get(i)));
+            Course course = graph.getCourse(order.get(i));
+            System.out.printf("%04d | %-9s | %-47s | %3d | %3d%n",
+                    i + 1,
+                    course.getCode(),
+                    truncate(course.getName(), 47),
+                    course.getSemester(),
+                    course.getCredits());
         }
     }
 
-    private static boolean addCourse(Scanner scanner, CourseGraph graph) {
-        System.out.println("Tambah mata kuliah baru");
+    private static void showCycleStatus(CourseGraph graph) {
+        printSection("Cycle Detection");
+        if (graph.hasCycle()) {
+            printError("Graph memiliki siklus. Topological sort tidak valid sampai siklus dihapus.");
+        } else {
+            printSuccess("Graph tidak memiliki siklus. Topological sort aman dijalankan.");
+        }
+    }
+
+    private static void addCourse(Scanner scanner, CourseGraph graph, Trie trie) {
+        printSection("Tambah Mata Kuliah");
         String code = readRequiredText(scanner, "Kode: ").toUpperCase();
         if (graph.getCourse(code) != null) {
-            System.out.println("Kode mata kuliah sudah ada: " + code);
-            return false;
+            printWarning("Kode mata kuliah sudah ada: " + code);
+            return;
         }
 
         String name = readRequiredText(scanner, "Nama: ");
@@ -191,39 +249,39 @@ public class Main {
         String difficulty = readRequiredText(scanner, "Difficulty: ");
 
         try {
-            graph.addCourse(new Course(code, name, semester, credits, category, track, difficulty));
-            System.out.println("Mata kuliah berhasil ditambahkan.");
-            return true;
+            Course newCourse = new Course(code, name, semester, credits, category, track, difficulty);
+            graph.addCourse(newCourse);
+            indexCourseInTrie(trie, newCourse);
+            printSuccess("Mata kuliah berhasil ditambahkan dan diindeks ke Trie.");
         } catch (IllegalArgumentException error) {
-            System.out.println("Gagal menambah mata kuliah: " + error.getMessage());
-            return false;
+            printError("Gagal menambah mata kuliah: " + error.getMessage());
         }
     }
 
     private static void addPrerequisiteRelation(Scanner scanner, CourseGraph graph) {
-        System.out.println("Tambah relasi prasyarat");
+        printSection("Tambah Relasi Prasyarat");
         String prerequisiteCode = readRequiredText(scanner, "Kode prasyarat: ").toUpperCase();
         String courseCode = readRequiredText(scanner, "Kode mata kuliah tujuan: ").toUpperCase();
 
         try {
             boolean added = graph.addEdge(prerequisiteCode, courseCode);
             if (added) {
-                System.out.println("Relasi berhasil ditambahkan: " + prerequisiteCode + " -> " + courseCode);
+                printSuccess("Relasi berhasil ditambahkan: " + prerequisiteCode + " -> " + courseCode);
             } else {
-                System.out.println("Relasi sudah ada, tidak ditambahkan ulang.");
+                printInfo("Relasi sudah ada, tidak ditambahkan ulang.");
             }
         } catch (IllegalArgumentException error) {
-            System.out.println("Gagal menambah relasi: " + error.getMessage());
+            printError("Gagal menambah relasi: " + error.getMessage());
         }
     }
 
-    private static boolean updateCourse(Scanner scanner, CourseGraph graph) {
-        System.out.println("Update mata kuliah");
+    private static void updateCourse(Scanner scanner, CourseGraph graph, Trie trie) {
+        printSection("Update Mata Kuliah");
         String code = readRequiredText(scanner, "Kode mata kuliah yang akan diupdate: ").toUpperCase();
         Course current = graph.getCourse(code);
         if (current == null) {
-            System.out.println("Kode mata kuliah tidak ditemukan: " + code);
-            return false;
+            printWarning("Kode mata kuliah tidak ditemukan: " + code);
+            return;
         }
 
         System.out.println("Data saat ini: " + current);
@@ -234,41 +292,40 @@ public class Main {
         String track = readOptionalText(scanner, "Track baru", current.getTrack());
         String difficulty = readOptionalText(scanner, "Difficulty baru", current.getDifficulty());
 
-        Course updatedCourse = new Course(code, name, semester, credits, category, track, difficulty);
         try {
-            graph.updateCourse(code, updatedCourse);
-            System.out.println("Mata kuliah berhasil diupdate.");
-            return true;
+            Course updatedCourse = new Course(current.getCode(), name, semester, credits, category, track, difficulty);
+            graph.updateCourse(current.getCode(), updatedCourse);
+            removeCourseFromTrie(trie, current);
+            indexCourseInTrie(trie, updatedCourse);
+            printSuccess("Mata kuliah berhasil diupdate dan indeks Trie diperbarui.");
         } catch (IllegalArgumentException error) {
-            System.out.println("Gagal update mata kuliah: " + error.getMessage());
-            return false;
+            printError("Gagal update mata kuliah: " + error.getMessage());
         }
     }
 
-    private static boolean deleteCourse(Scanner scanner, CourseGraph graph) {
-        System.out.println("Delete mata kuliah");
+    private static void deleteCourse(Scanner scanner, CourseGraph graph, Trie trie) {
+        printSection("Delete Mata Kuliah");
         String code = readRequiredText(scanner, "Kode mata kuliah yang akan dihapus: ").toUpperCase();
         Course course = graph.getCourse(code);
         if (course == null) {
-            System.out.println("Kode mata kuliah tidak ditemukan: " + code);
-            return false;
+            printWarning("Kode mata kuliah tidak ditemukan: " + code);
+            return;
         }
 
         System.out.println("Data yang akan dihapus: " + course);
         System.out.print("Yakin hapus mata kuliah dan semua edge terkait? (y/n): ");
         String confirmation = scanner.nextLine().trim();
         if (!confirmation.equalsIgnoreCase("y")) {
-            System.out.println("Delete dibatalkan.");
-            return false;
+            printInfo("Delete dibatalkan.");
+            return;
         }
 
         try {
-            graph.deleteCourse(code);
-            System.out.println("Mata kuliah berhasil dihapus beserta edge terkait.");
-            return true;
+            graph.deleteCourse(course.getCode());
+            removeCourseFromTrie(trie, course);
+            printSuccess("Mata kuliah berhasil dihapus dari graph dan Trie.");
         } catch (IllegalArgumentException error) {
-            System.out.println("Gagal delete mata kuliah: " + error.getMessage());
-            return false;
+            printError("Gagal delete mata kuliah: " + error.getMessage());
         }
     }
 
@@ -279,7 +336,7 @@ public class Main {
             if (!value.isEmpty()) {
                 return value;
             }
-            System.out.println("Input tidak boleh kosong.");
+            printWarning("Input tidak boleh kosong.");
         }
     }
 
@@ -295,7 +352,7 @@ public class Main {
             } catch (NumberFormatException ignored) {
                 // handled by message below
             }
-            System.out.println("Input harus berupa angka positif.");
+            printWarning("Input harus berupa angka positif.");
         }
     }
 
@@ -321,7 +378,59 @@ public class Main {
             } catch (NumberFormatException ignored) {
                 // handled by message below
             }
-            System.out.println("Input harus berupa angka positif atau kosong untuk mempertahankan nilai lama.");
+            printWarning("Input harus berupa angka positif atau kosong untuk mempertahankan nilai lama.");
         }
+    }
+
+    private static void printSection(String title) {
+        printLine('=');
+        System.out.println(title);
+        printLine('=');
+    }
+
+    private static void printSuccess(String message) {
+        System.out.println("[OK] " + message);
+    }
+
+    private static void printWarning(String message) {
+        System.out.println("[WARN] " + message);
+    }
+
+    private static void printError(String message) {
+        System.out.println("[ERROR] " + message);
+    }
+
+    private static void printInfo(String message) {
+        System.out.println("[INFO] " + message);
+    }
+
+    private static void printLine(char character) {
+        for (int i = 0; i < MENU_WIDTH; i++) {
+            System.out.print(character);
+        }
+        System.out.println();
+    }
+
+    private static String centerText(String text, int width) {
+        if (text.length() >= width) {
+            return text;
+        }
+        int leftPadding = (width - text.length()) / 2;
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < leftPadding; i++) {
+            builder.append(' ');
+        }
+        builder.append(text);
+        return builder.toString();
+    }
+
+    private static String truncate(String text, int maxLength) {
+        if (text.length() <= maxLength) {
+            return text;
+        }
+        if (maxLength <= 3) {
+            return text.substring(0, maxLength);
+        }
+        return text.substring(0, maxLength - 3) + "...";
     }
 }
