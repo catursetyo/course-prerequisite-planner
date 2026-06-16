@@ -1,7 +1,5 @@
 # Tracing Manual - Course Prerequisite Planner
 
-Dokumen ini berisi tracing manual untuk struktur data Tree, struktur data Graph, dan satu edge case. File ini dipisahkan dari `README.md` agar dapat dikonversi menjadi `tracing.pdf`.
-
 ## Dataset yang Dipakai
 
 Tracing memakai data dari:
