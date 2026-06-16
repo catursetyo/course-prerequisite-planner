@@ -7,11 +7,11 @@
 
 | No | Nama | NRP |
 | --: | ---- | --- |
-| 1 | Catur Setyo Ragil | 502725066 |
+| 1 | Catur Setyo Ragil | 5027251066 |
 | 2 | Aura Syahzanani A | 5027251123 |
 | 3 | Donnavie Aulia | 5027251093 |
 | 4 | Nur Rizki Syahbana | 5027251095 |
-| 5 | Nama anggota ke-5 perlu dilengkapi | NRP perlu dilengkapi |
+| 5 | Ahmad Rabbani Fata | 5027241046 |
 
 ## Ringkasan Project
 
@@ -120,6 +120,8 @@ course-prerequisite-planner/
 ├── assets/
 │   └── screenshot-*.png
 ├── docs/
+│   └── laporan.pdf
+│   └── tracing.pdf
 ├── README.md
 └── TRACING.md
 ```
@@ -127,6 +129,13 @@ course-prerequisite-planner/
 ## Cara Compile dan Run
 
 Jalankan dari root folder project:
+
+```bash
+javac -d out src/Main.java src/model/Course.java src/graph/CourseGraph.java src/tree/Trie.java src/tree/TrieNode.java
+java -cp out Main
+```
+
+Alternatif untuk Linux/macOS/Git Bash:
 
 ```bash
 javac -d out $(find src -name "*.java")
@@ -392,8 +401,6 @@ k = jumlah tetangga pada list adjacency
 
 ![Topological Sort 2](assets/screenshot-5-topological-sort2.png)
 
-![Topological Sort 3](assets/screenshot-5-topological-sort3.png)
-
 ### Cycle Detection
 
 ![Cycle Detection](assets/screenshot-6-cycle-detection.png)
@@ -427,21 +434,3 @@ Course dengan kode duplikat ditolak karena kode adalah key graph. Relasi prasyar
 ### 6. Apa yang terjadi jika graph tidak terhubung?
 
 Program tetap berjalan. Cycle detection mengecek semua komponen, sedangkan topological sort memasukkan semua node dengan indegree 0 ke queue. Mata kuliah yang tidak punya relasi prasyarat akan tetap muncul dalam rekomendasi.
-
-## Tracing Manual
-
-Tracing manual dipisahkan ke file:
-
-```text
-TRACING.md
-```
-
-File tersebut dapat dikonversi menjadi `tracing.pdf`. Pemisahan ini mengikuti kebutuhan deliverable agar laporan utama dan tracing manual dapat dikumpulkan sebagai dokumen berbeda.
-
-## Kesimpulan
-
-Course Prerequisite Planner berhasil memenuhi requirement final project Topik 9. Program menggunakan directed graph untuk merepresentasikan hubungan prasyarat, Trie untuk pencarian prefix, serta tiga algoritma graph utama: DFS, cycle detection, dan topological sort.
-
-Dataset dibaca dari CSV dan berisi 70 mata kuliah serta 40 relasi prasyarat. Program tidak hanya melakukan CRUD, tetapi juga memberikan rekomendasi urutan pengambilan mata kuliah, mendeteksi konflik kurikulum berupa cycle, dan menggabungkan hasil search Trie dengan informasi relasi Graph.
-
-Dengan validasi input, rollback edge yang menyebabkan cycle, dan dokumentasi kompleksitas, aplikasi ini dapat digunakan sebagai simulasi perencanaan studi berbasis struktur data Tree dan Graph.
